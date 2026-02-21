@@ -1,0 +1,5427 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Basilissa — Hero Slideshow Demo</title>
+
+  <!-- Google Font + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="" crossorigin="anonymous"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<style>
+/* ==========================================================
+   BASILISSA — MENU PAGE STYLES (World-Class, Mobile-First)
+   Palette: Black/Dark + Basilissa Yellow + Action Red/Orange
+   Notes:
+   - Designed for phones first
+   - Drawers/modals world-class
+   - High contrast, accessible tap targets
+   ========================================================== */
+
+/* ---------- Design Tokens ---------- */
+:root{
+  --bg: #0b0c10;
+  --bg-2:#0f121a;
+  --panel:#111522;
+  --panel-2:#0f1422;
+  --card:#121827;
+  --card-2:#0f1526;
+
+  --text:#eef2ff;
+  --muted:#b7bfd6;
+  --muted-2:#8f9ab6;
+
+  --line: rgba(255,255,255,.10);
+  --line-2: rgba(255,255,255,.14);
+
+  --yellow:#ffd400;
+  --yellow-2:#ffea6b;
+
+  --action:#ff3b30;       /* urgent CTA */
+  --action-2:#ff6a00;     /* warm accent option */
+  --ok:#20c997;
+  --warn:#ffcc00;
+
+  --shadow: 0 18px 55px rgba(0,0,0,.55);
+  --shadow-soft: 0 10px 35px rgba(0,0,0,.35);
+
+  --radius: 18px;
+  --radius-2: 26px;
+
+  --container: 1120px;
+
+  --tap: 44px;
+
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#0b0c10;
+  }
+}
+
+/* ---------- Global Reset-ish ---------- */
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(900px 600px at 12% 0%, rgba(255,212,0,.08) 0%, rgba(255,212,0,0) 55%),
+    radial-gradient(800px 520px at 88% 18%, rgba(255,59,48,.06) 0%, rgba(255,59,48,0) 55%),
+    linear-gradient(180deg, var(--bg) 0%, #07080d 100%);
+  overflow-x:hidden;
+}
+
+img{ max-width:100%; display:block; }
+a{ color: inherit; text-decoration:none; }
+button, input, textarea, select{ font: inherit; color: inherit; }
+button{ cursor:pointer; }
+:focus-visible{ outline: 2px solid rgba(255,212,0,.85); outline-offset: 3px; border-radius: 10px; }
+
+/* scroll lock for drawers/modals */
+.scroll-lock{ overflow:hidden !important; }
+
+.container{
+  width: min(100% - 32px, var(--container));
+  margin-inline:auto;
+}
+
+/* screen-reader only */
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden; clip: rect(0,0,0,0);
+  white-space:nowrap; border:0;
+}
+
+/* skip link */
+.skip-link{
+  position:absolute;
+  left:12px; top:12px;
+  padding:10px 12px;
+  background: rgba(255,212,0,.95);
+  color:#101010;
+  border-radius: 12px;
+  transform: translateY(-140%);
+  transition: transform .22s ease;
+  z-index: 9999;
+  font-weight: 700;
+}
+.skip-link:focus{ transform: translateY(0); }
+
+/* ---------- Buttons ---------- */
+.btn{
+  min-height: var(--tap);
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  transition: transform .12s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+  user-select:none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+.btn:active{ transform: translateY(0); }
+
+.btn--action{
+  border: 1px solid rgba(255,59,48,.35);
+  background: linear-gradient(135deg, var(--action) 0%, var(--action-2) 100%);
+  color: #0d0d0f;
+  font-weight: 800;
+  box-shadow: 0 12px 30px rgba(255,59,48,.22);
+}
+.btn--action:hover{ box-shadow: 0 16px 38px rgba(255,59,48,.28); }
+
+.btn--secondary{
+  border: 1px solid rgba(255,212,0,.25);
+  background: linear-gradient(180deg, rgba(255,212,0,.18), rgba(255,212,0,.08));
+  color: var(--text);
+}
+.btn--ghost{
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.02);
+}
+
+.btn--add{
+  border-color: rgba(255,212,0,.22);
+  background: rgba(255,212,0,.10);
+  font-weight: 750;
+}
+
+/* icon buttons */
+.icon-btn{
+  min-width: var(--tap);
+  min-height: var(--tap);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  position:relative;
+  transition: background .18s ease, border-color .18s ease, transform .12s ease;
+}
+.icon-btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); transform: translateY(-1px); }
+.icon-btn:active{ transform: translateY(0); }
+
+/* badges */
+.badge{
+  position:absolute;
+  left:12px; top:12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(10px);
+  background: rgba(15,18,26,.55);
+}
+.badge--best{ border-color: rgba(255,59,48,.22); }
+.badge--popular{ border-color: rgba(255,212,0,.25); }
+.badge--veg{ border-color: rgba(32,201,151,.25); }
+.badge--spicy{ border-color: rgba(255,106,0,.25); }
+.badge--value{ border-color: rgba(255,255,255,.18); }
+.badge--family{ border-color: rgba(255,255,255,.18); }
+.badge--premium{ border-color: rgba(255,212,0,.22); }
+
+/* small chips */
+.chip, .meta-pill, .trust-pill, .mini-pill, .availability-pill, .status-pill, .mini-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  line-height: 1;
+}
+
+.chip--brand{ border-color: rgba(255,212,0,.22); background: rgba(255,212,0,.10); }
+.chip--time{ border-color: rgba(255,255,255,.10); }
+
+.meta-pill{ color: var(--muted); }
+.mini-pill{ color: var(--muted); }
+
+.status-pill{
+  padding: 8px 10px;
+  font-weight: 750;
+}
+.status-pill.is-open{ border-color: rgba(32,201,151,.35); color: #c9ffef; background: rgba(32,201,151,.10); }
+.status-pill.is-closed{ border-color: rgba(255,59,48,.32); color: #ffd0cc; background: rgba(255,59,48,.10); }
+.status-pill.is-unknown{ border-color: rgba(255,255,255,.12); color: var(--muted); }
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position: sticky;
+  top:0;
+  z-index: 60;
+  background: rgba(11,12,16,.75);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.topbar .container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding: 10px 0;
+}
+.topbar__left{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.topbar__right{ display:flex; align-items:center; gap:10px; }
+
+.topbar__badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,212,0,.22);
+  background: rgba(255,212,0,.10);
+  color: var(--text);
+}
+.topbar__badge a{ text-decoration: underline; text-underline-offset: 3px; }
+
+.topbar__note{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.topbar__link{
+  font-size: 12px;
+  color: var(--muted);
+  padding: 10px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition: background .18s ease, border-color .18s ease;
+}
+.topbar__link:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+
+/* ---------- Header ---------- */
+.header{
+  position: sticky;
+  top: 49px; /* below topbar */
+  z-index: 55;
+  background: rgba(11,12,16,.66);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.header__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 0;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brand__mark{
+  width: 44px; height: 44px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,212,0,.22), rgba(255,212,0,.10));
+  border: 1px solid rgba(255,212,0,.22);
+  display:grid;
+  place-items:center;
+  box-shadow: 0 10px 20px rgba(0,0,0,.25);
+}
+.brand__mark i{ color: var(--yellow); }
+
+.brand__name{
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: 16px;
+}
+.brand__tagline{
+  display:block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.nav{
+  display:none;
+  gap: 14px;
+}
+.nav__link{
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 13px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.nav__link:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); color: var(--text); }
+
+.header__actions{ display:flex; align-items:center; gap:10px; }
+.menu-btn{ display:inline-flex; }
+
+/* cart count bubble */
+.cart-count{
+  position:absolute;
+  right: -7px; top: -7px;
+  background: linear-gradient(135deg, var(--action), var(--action-2));
+  color: #0d0d0f;
+  font-weight: 900;
+  font-size: 11px;
+  width: 22px; height: 22px;
+  border-radius: 999px;
+  display:grid;
+  place-items:center;
+  border: 2px solid rgba(11,12,16,.95);
+  box-shadow: 0 10px 18px rgba(0,0,0,.35);
+}
+
+/* ---------- Mobile Drawer ---------- */
+.mobile-drawer{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 120;
+  display:grid;
+  place-items: end stretch;
+}
+.mobile-drawer__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.mobile-drawer__title{
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: .2px;
+}
+.mobile-drawer__links{
+  padding: 14px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.mobile-drawer__link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: var(--text);
+  font-weight: 750;
+}
+.mobile-drawer__link i{ color: var(--yellow); }
+.mobile-drawer__cta{
+  padding: 14px 18px 22px;
+  display:grid;
+  gap:10px;
+}
+.mobile-drawer > *{
+  width: 100%;
+}
+.mobile-drawer .mobile-drawer__top,
+.mobile-drawer .mobile-drawer__links,
+.mobile-drawer .mobile-drawer__cta{
+  background: linear-gradient(180deg, rgba(17,21,34,.98), rgba(13,16,24,.98));
+}
+.mobile-drawer[hidden]{ display:none; }
+
+/* ---------- Sticky Menu Bar ---------- */
+.menu-sticky{
+  position: sticky;
+  top: 115px; /* topbar + header */
+  z-index: 50;
+  background: rgba(11,12,16,.60);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.menu-sticky__inner{
+  padding: 10px 0 12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.menu-sticky__left{
+  display:flex;
+  gap:10px;
+}
+.pill{
+  min-height: var(--tap);
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+}
+.pill--branch{ border-color: rgba(255,212,0,.20); background: rgba(255,212,0,.08); }
+.pill--search{ flex: 1; justify-content:flex-start; }
+.pill--clear{ border-color: rgba(255,255,255,.10); background: rgba(255,255,255,.02); }
+
+/* category tabs */
+.category-tabs{
+  display:flex;
+  gap:10px;
+  overflow:auto;
+  padding-bottom: 2px;
+  scroll-snap-type: x mandatory;
+}
+.category-tabs::-webkit-scrollbar{ height: 8px; }
+.category-tabs::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.12); border-radius: 999px; }
+.tab{
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.tab i{ color: rgba(255,212,0,.85); }
+.tab.is-active{
+  color: #101010;
+  background: linear-gradient(135deg, rgba(255,212,0,.95), rgba(255,234,107,.85));
+  border-color: rgba(255,212,0,.35);
+}
+.tab.is-active i{ color: #101010; }
+
+/* ---------- Hero ---------- */
+.menu-hero{
+  position:relative;
+  padding: 18px 0 18px;
+}
+.menu-hero__media{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.menu-hero__media img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  opacity: .25;
+  transform: scale(1.05);
+  filter: saturate(1.1) contrast(1.08);
+}
+.menu-hero__media::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(800px 460px at 30% 20%, rgba(255,212,0,.18) 0%, rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, rgba(11,12,16,.30) 0%, rgba(11,12,16,.92) 70%, rgba(11,12,16,1) 100%);
+}
+.menu-hero__content{
+  position:relative;
+  padding: 18px 0 18px;
+}
+.menu-hero__kicker{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom: 14px;
+}
+.menu-hero__title{
+  margin:0;
+  font-size: 30px;
+  line-height: 1.08;
+  letter-spacing: -.6px;
+  font-weight: 950;
+}
+.menu-hero__subtitle{
+  margin: 10px 0 0;
+  color: var(--muted);
+  max-width: 58ch;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.menu-hero__cta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top: 14px;
+}
+.menu-hero__trust{
+  margin-top: 16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.trust-pill a{
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Sections ---------- */
+.section{
+  padding: 22px 0;
+}
+.section__header{
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.section__kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color: var(--yellow-2);
+  font-weight: 900;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.section__title{
+  margin:0;
+  font-size: 20px;
+  letter-spacing: -.3px;
+  font-weight: 950;
+}
+.section__desc{
+  margin:0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+/* ---------- Stars Grid ---------- */
+.stars__grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* ---------- Menu Card ---------- */
+.menu-card{
+  border-radius: var(--radius-2);
+  background: linear-gradient(180deg, rgba(18,24,39,.92), rgba(12,16,26,.92));
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: var(--shadow-soft);
+  overflow:hidden;
+  transform: translateZ(0);
+  transition: transform .14s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.menu-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.16);
+  box-shadow: var(--shadow);
+}
+.menu-card[hidden]{ display:none !important; }
+
+.menu-card__media{
+  position:relative;
+  aspect-ratio: 16/10;
+  overflow:hidden;
+  background: rgba(255,255,255,.03);
+}
+.menu-card__media img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  transition: transform .35s ease;
+  filter: saturate(1.12) contrast(1.05);
+}
+.menu-card:hover .menu-card__media img{
+  transform: scale(1.08);
+}
+
+.menu-card__body{
+  padding: 14px 14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.menu-card__title{
+  margin:0;
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: -.2px;
+}
+.menu-card__desc{
+  margin:0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.menu-card__meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.menu-card__upsell{
+  margin-top: -2px;
+}
+.upsell{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,212,0,.16);
+  background: rgba(255,212,0,.07);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.upsell i{ color: rgba(255,212,0,.92); margin-top: 2px; }
+
+.menu-card__actions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+
+/* star emphasis */
+.menu-card--star{
+  border-color: rgba(255,212,0,.20);
+  box-shadow: 0 16px 45px rgba(255,212,0,.10), var(--shadow-soft);
+}
+.menu-card--star .menu-card__title{ font-size: 17px; }
+
+/* ---------- Filters Bar ---------- */
+.filters__bar{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding: 14px;
+  border-radius: var(--radius-2);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.filters__left, .filters__right{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+}
+.filters__label{
+  font-weight: 950;
+  color: var(--yellow-2);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.filter-chip{
+  min-height: 40px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  font-weight: 850;
+  font-size: 12px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition: background .18s ease, border-color .18s ease, transform .12s ease, color .18s ease;
+}
+.filter-chip:hover{ transform: translateY(-1px); background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); color: var(--text); }
+.filter-chip.is-active{
+  color: #101010;
+  border-color: rgba(255,212,0,.32);
+  background: linear-gradient(135deg, rgba(255,212,0,.95), rgba(255,234,107,.85));
+}
+.filter-chip.is-active i{ color:#101010; }
+
+/* ---------- Category Sections ---------- */
+.category{
+  padding: 22px 0;
+}
+.category__header{
+  display:grid;
+  gap: 12px;
+}
+.category__titlewrap{ display:flex; flex-direction:column; gap:8px; }
+.category__title{
+  margin:0;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -.25px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.category__title i{ color: rgba(255,212,0,.92); }
+.category__subtitle{
+  margin:0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.category__hero{
+  border-radius: var(--radius-2);
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  box-shadow: var(--shadow-soft);
+}
+.category__hero img{
+  width:100%;
+  aspect-ratio: 16/7;
+  object-fit: cover;
+  opacity:.92;
+  filter: saturate(1.12) contrast(1.05);
+}
+.category__grid{
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.category__note{
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  line-height: 1.5;
+}
+.category__note i{ color: rgba(255,212,0,.88); margin-top: 2px; }
+
+/* ---------- Trust Section ---------- */
+.trust__card{
+  display:grid;
+  gap:14px;
+  padding: 16px;
+  border-radius: var(--radius-2);
+  border: 1px solid rgba(255,212,0,.18);
+  background:
+    radial-gradient(600px 300px at 10% 0%, rgba(255,212,0,.12) 0%, rgba(255,212,0,0) 60%),
+    linear-gradient(180deg, rgba(18,24,39,.82), rgba(10,12,18,.92));
+  box-shadow: var(--shadow-soft);
+}
+.trust__icon{
+  width: 54px; height: 54px;
+  border-radius: 18px;
+  display:grid;
+  place-items:center;
+  background: rgba(255,212,0,.10);
+  border: 1px solid rgba(255,212,0,.20);
+}
+.trust__icon i{ color: var(--yellow); font-size: 18px; }
+.trust__title{
+  margin:0;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -.25px;
+}
+.trust__text{
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+.trust__actions{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.trust__mini{
+  margin-top: 12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+/* ---------- Back to Top ---------- */
+.back-to-top{
+  position: fixed;
+  right: 14px;
+  bottom: 96px; /* above order sticky */
+  width: 46px;
+  height: 46px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(17,21,34,.70);
+  backdrop-filter: blur(12px);
+  display:grid;
+  place-items:center;
+  opacity: 0;
+  pointer-events:none;
+  transform: translateY(10px);
+  transition: opacity .2s ease, transform .2s ease, background .18s ease;
+  z-index: 80;
+}
+.back-to-top.is-visible{
+  opacity: 1;
+  pointer-events:auto;
+  transform: translateY(0);
+}
+.back-to-top:hover{ background: rgba(17,21,34,.86); }
+
+/* ---------- Sticky Order Bar ---------- */
+.order-sticky{
+  position: fixed;
+  left:0; right:0;
+  bottom: 0;
+  z-index: 90;
+  padding: 10px 0 calc(env(safe-area-inset-bottom) + 10px);
+  background: rgba(11,12,16,.75);
+  border-top: 1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(14px);
+}
+.order-sticky__inner{
+  display:grid;
+  grid-template-columns: 1.2fr .9fr .9fr;
+  gap:10px;
+}
+.order-sticky__btn{
+  min-height: 50px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  font-weight: 850;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.order-sticky__btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.16); }
+.order-sticky__btn:first-child{
+  border-color: rgba(255,59,48,.35);
+  background: linear-gradient(135deg, var(--action), var(--action-2));
+  color: #0d0d0f;
+  font-weight: 950;
+}
+.order-sticky__count{
+  margin-left: 6px;
+  width: 22px; height: 22px;
+  border-radius: 999px;
+  display:grid;
+  place-items:center;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(0,0,0,.25);
+  color: #0d0d0f;
+  font-weight: 950;
+}
+
+/* ---------- Modal Base ---------- */
+.modal{
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display:grid;
+  place-items: center;
+  padding: 18px;
+}
+.modal[hidden]{ display:none; }
+.modal__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.60);
+  backdrop-filter: blur(2px);
+}
+.modal__panel{
+  position:relative;
+  width: min(100%, 560px);
+  max-height: min(82vh, 760px);
+  overflow:hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(18,24,39,.96), rgba(10,12,18,.96));
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+.modal__head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.modal__title{
+  margin:0;
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing: -.1px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.modal__body{
+  padding: 14px;
+  overflow:auto;
+}
+.modal__foot{
+  padding: 14px;
+  border-top: 1px solid rgba(255,255,255,.10);
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:flex-end;
+}
+.modal__note{
+  margin:0;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: var(--muted);
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  line-height:1.5;
+}
+
+/* Search */
+.search-form{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom: 12px;
+}
+.search-form input{
+  flex:1;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  outline: none;
+}
+.search-form input::placeholder{ color: rgba(183,191,214,.75); }
+.search-suggestions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom: 12px;
+}
+.search-suggestions .chip{
+  cursor:pointer;
+  transition: transform .12s ease, background .18s ease, border-color .18s ease;
+}
+.search-suggestions .chip:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.16); }
+
+.search-results .empty-state{
+  padding: 18px 14px;
+  border-radius: 18px;
+  border: 1px dashed rgba(255,255,255,.14);
+  color: var(--muted);
+  text-align:center;
+}
+.search-results .empty-state i{ color: rgba(255,212,0,.85); font-size: 18px; display:block; margin-bottom: 8px; }
+
+.results{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.result{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  text-align:left;
+  transition: transform .12s ease, background .18s ease, border-color .18s ease;
+}
+.result:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.16);
+  background: rgba(255,255,255,.05);
+}
+.result__title{ font-weight: 950; margin-bottom: 4px; }
+.result__desc{ color: var(--muted); font-size: 12px; line-height: 1.45; }
+.result__meta{ margin-top: 8px; }
+.result__badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 850;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+}
+.result__badge.ok{ border-color: rgba(32,201,151,.28); background: rgba(32,201,151,.08); }
+.result__badge.warn{ border-color: rgba(255,212,0,.22); background: rgba(255,212,0,.08); }
+.result__end{ color: rgba(255,212,0,.85); padding-top: 4px; }
+
+/* ---------- Drawer Base ---------- */
+.drawer, .cart-drawer{
+  position: fixed;
+  inset: 0;
+  z-index: 145;
+}
+.drawer[hidden], .cart-drawer[hidden]{ display:none; }
+
+.drawer__backdrop, .cart-drawer__backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.60);
+  backdrop-filter: blur(2px);
+}
+
+.drawer__panel, .cart-drawer__panel{
+  position:absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: min(100%, 520px);
+  background: linear-gradient(180deg, rgba(18,24,39,.98), rgba(9,11,17,.98));
+  border-left: 1px solid rgba(255,255,255,.12);
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+  animation: slideIn .22s ease both;
+}
+
+@keyframes slideIn{
+  from{ transform: translateX(14px); opacity:.5; }
+  to{ transform: translateX(0); opacity:1; }
+}
+
+.drawer__head, .cart-drawer__head{
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.drawer__title, .cart-drawer__title{
+  margin:0;
+  font-size: 14px;
+  font-weight: 950;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.drawer__body, .cart-drawer__body{
+  padding: 14px;
+  overflow:auto;
+}
+.drawer__desc{
+  margin:0 0 12px;
+  color: var(--muted);
+  line-height:1.6;
+  font-size: 13px;
+}
+
+.drawer__foot, .cart-drawer__foot{
+  padding: 14px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+/* Branch drawer list */
+.branch-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.branch-item{
+  width:100%;
+  text-align:left;
+  padding: 12px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  transition: transform .12s ease, background .18s ease, border-color .18s ease;
+}
+.branch-item:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.16);
+  background: rgba(255,255,255,.05);
+}
+.branch-item__name{ font-weight: 950; }
+.branch-item__phone{ color: var(--muted); font-size: 12px; display:inline-flex; gap:8px; align-items:center; }
+.branch-item__hint{ color: rgba(255,212,0,.85); font-weight: 900; font-size: 12px; }
+
+.drawer__footer-note{
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  display:flex;
+  gap:10px;
+  line-height:1.5;
+}
+.drawer__footer-note i{ color: rgba(255,212,0,.86); margin-top: 2px; }
+
+/* Config Drawer Special */
+.drawer--config .drawer__panel{
+  width: min(100%, 560px);
+}
+
+.config-warning{
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,212,0,.18);
+  background: rgba(255,212,0,.08);
+  color: var(--muted);
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  line-height:1.5;
+}
+.config-warning i{ color: rgba(255,212,0,.9); margin-top: 2px; }
+
+.config-head{
+  display:grid;
+  grid-template-columns: 96px 1fr;
+  gap:12px;
+  padding: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  margin-bottom: 12px;
+}
+.config-head__media{
+  border-radius: 18px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.config-head__media img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+.config-head__title{
+  margin:0;
+  font-size: 15px;
+  font-weight: 950;
+}
+.config-head__desc{
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height:1.45;
+}
+.config-head__price{
+  margin-top: 8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.price{
+  font-weight: 950;
+  color: #101010;
+  background: linear-gradient(135deg, rgba(255,212,0,.95), rgba(255,234,107,.85));
+  border-radius: 999px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,212,0,.35);
+}
+
+.config-section{
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.config-section__title{
+  margin:0 0 10px;
+  font-size: 13px;
+  font-weight: 950;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.config-section__title i{ color: rgba(255,212,0,.88); }
+
+.config-block__head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 10px;
+}
+.config-block__label{ font-weight: 900; color: var(--text); font-size: 12px; }
+.config-block__hint{ color: var(--muted); font-size: 12px; }
+
+.config-options{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.option{
+  min-height: 44px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  cursor:pointer;
+  user-select:none;
+}
+.option input{ accent-color: var(--yellow); }
+.option:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+
+.config-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.check{
+  min-height: 44px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  cursor:pointer;
+}
+.check input{ accent-color: var(--yellow); }
+.check:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+
+.extras-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.extra{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  cursor:pointer;
+}
+.extra input{ accent-color: var(--yellow); }
+.extra:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+.extra__main{ display:flex; flex-direction:column; gap:2px; }
+.extra__name{ font-weight: 950; }
+.extra__desc{ color: var(--muted); font-size: 12px; }
+.extra__price{ color: rgba(255,212,0,.92); font-weight: 950; }
+
+/* combo */
+.combo-box{
+  padding: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,59,48,.18);
+  background: rgba(255,59,48,.06);
+}
+.combo-box__head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  margin-bottom: 10px;
+}
+.combo-box__title{
+  font-weight: 950;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.combo-box__title i{ color: rgba(255,59,48,.90); }
+.combo-box__hint{ color: var(--muted); font-size: 12px; }
+
+.toggle{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  user-select:none;
+}
+.toggle input{ display:none; }
+.toggle__ui{
+  width: 54px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  position:relative;
+  flex: 0 0 auto;
+}
+.toggle__ui::after{
+  content:"";
+  position:absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  width: 24px; height: 24px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 10px 18px rgba(0,0,0,.35);
+  transition: left .18s ease, background .18s ease;
+}
+.toggle input:checked + .toggle__ui{
+  background: rgba(255,59,48,.30);
+  border-color: rgba(255,59,48,.35);
+}
+.toggle input:checked + .toggle__ui::after{
+  left: 26px;
+  background: linear-gradient(135deg, var(--action), var(--action-2));
+}
+.toggle__text{ color: var(--muted); font-size: 13px; line-height:1.4; }
+
+/* instructions */
+.instructions{
+  width:100%;
+  padding: 12px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  resize: vertical;
+  min-height: 92px;
+  outline:none;
+}
+.instructions::placeholder{ color: rgba(183,191,214,.7); }
+
+/* pairs */
+.pair-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.pair{
+  min-height: 44px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  font-weight: 850;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.pair:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+
+/* drawer footer summary */
+.drawer__summary{
+  display:grid;
+  gap:10px;
+  margin-bottom: 10px;
+}
+.drawer__summary-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color: var(--muted);
+}
+.drawer__summary-row strong{ color: var(--text); }
+.qty{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.qty__btn{
+  width: 44px; height: 44px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  display:grid;
+  place-items:center;
+}
+.qty__btn:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+.qty__input{
+  width: 64px;
+  min-height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  text-align:center;
+}
+
+.drawer__foot-actions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.drawer__foot-note{
+  margin: 10px 0 0;
+  color: var(--muted);
+  display:flex;
+  gap:10px;
+  line-height:1.5;
+}
+.drawer__foot-note i{ color: rgba(255,212,0,.86); margin-top:2px; }
+
+/* ---------- Cart Drawer ---------- */
+.cart-empty{
+  padding: 18px 14px;
+  border-radius: 22px;
+  border: 1px dashed rgba(255,255,255,.16);
+  text-align:center;
+  color: var(--muted);
+}
+.cart-empty i{ color: rgba(255,212,0,.88); font-size: 18px; display:block; margin-bottom: 8px; }
+.cart-empty h3{ margin: 6px 0 6px; color: var(--text); }
+.cart-empty p{ margin: 0 0 12px; }
+
+.cart-items{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.cart-item{
+  display:grid;
+  grid-template-columns: 74px 1fr 44px;
+  gap:12px;
+  align-items:start;
+  padding: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.cart-item__img{
+  border-radius: 18px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.cart-item__img img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+.cart-item__title{
+  font-weight: 950;
+  letter-spacing: -.1px;
+  margin-bottom: 6px;
+}
+.cart-item__meta{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 8px;
+}
+.cart-item__price{ color: var(--muted); font-size: 12px; }
+.cart-item__line{ font-weight: 950; color: rgba(255,212,0,.92); font-size: 13px; }
+.cart-item__chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 8px; }
+.mini-chip{
+  padding: 7px 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cart-item__mods{
+  color: var(--muted);
+  font-size: 12px;
+  line-height:1.45;
+  display:grid;
+  gap:6px;
+  margin-bottom: 10px;
+}
+.mod-line{ opacity:.95; }
+
+.cart-item__controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.qty-btn{
+  width: 42px; height: 42px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  display:grid;
+  place-items:center;
+}
+.qty-btn:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+.qty-input{
+  width: 64px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  text-align:center;
+}
+
+.cart-summary{
+  display:grid;
+  gap:10px;
+  margin-bottom: 10px;
+}
+.cart-summary__row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color: var(--muted);
+}
+.cart-summary__row strong{ color: var(--text); }
+
+.cart-drawer__actions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+.cart-drawer__note{
+  margin: 10px 0 0;
+  color: var(--muted);
+  display:flex;
+  gap:10px;
+  line-height: 1.5;
+}
+.cart-drawer__note i{ color: rgba(255,212,0,.86); margin-top:2px; }
+
+/* ---------- Checkout ---------- */
+.checkout-branch{
+  padding: 12px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  margin-bottom: 12px;
+}
+.checkout-branch__label{
+  color: var(--muted);
+  font-size: 12px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.checkout-branch__label i{ color: rgba(255,212,0,.88); }
+.checkout-branch__value{ display:block; margin-top: 6px; font-weight: 950; }
+.checkout-branch__hint{ margin-top: 6px; color: var(--muted); font-size: 12px; line-height:1.45; }
+
+.checkout-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.checkout-item{
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.checkout-item__row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+.checkout-item__row.muted{ color: var(--muted); font-size: 12px; margin-top: 6px; }
+.checkout-item__mods{ margin-top: 10px; color: var(--muted); font-size: 12px; display:grid; gap:6px; }
+
+.checkout-total{
+  margin-top: 12px;
+  padding: 12px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,212,0,.18);
+  background: rgba(255,212,0,.08);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-weight: 950;
+}
+.checkout-total strong{ color: rgba(255,212,0,.95); }
+
+.checkout-instructions{
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.checkout-instructions__title{
+  margin:0 0 10px;
+  font-size: 13px;
+  font-weight: 950;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.checkout-instructions__title i{ color: rgba(255,212,0,.88); }
+
+.form-grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:10px;
+}
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.field__label{ color: var(--muted); font-size: 12px; font-weight: 850; }
+.field__input{
+  min-height: 48px;
+  padding: 12px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  outline:none;
+}
+.field__input::placeholder{ color: rgba(183,191,214,.72); }
+.field--full{ grid-column: 1 / -1; }
+
+/* ---------- Footer ---------- */
+.footer{
+  padding: 28px 0 100px; /* space for sticky order bar */
+  border-top: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.12);
+}
+.footer__grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:18px;
+}
+.footer__title{
+  margin:0 0 10px;
+  font-size: 13px;
+  font-weight: 950;
+  color: var(--yellow-2);
+}
+.footer__desc{
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 13px;
+}
+.footer__hotline{
+  margin-top: 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color: var(--muted);
+}
+.footer__hotline a{
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.footer__social{
+  margin-top: 12px;
+  display:flex;
+  gap:10px;
+}
+.social-btn{
+  width: 44px; height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  display:grid;
+  place-items:center;
+}
+.social-btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.16); }
+
+.footer__links{
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+.footer__link{
+  display:block;
+  padding: 10px 10px;
+  border-radius: 14px;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+  margin-top: 10px;
+}
+.footer__link:hover{ background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); color: var(--text); }
+.footer__mini{
+  display:block;
+  color: var(--muted);
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+  margin-top: 10px;
+  font-size: 12px;
+}
+.footer__bottom{
+  border-top: 1px solid rgba(255,255,255,.08);
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.footer__bottom-inner{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.footer__bottom-note{ color: rgba(255,212,0,.82); font-weight: 900; }
+
+/* ---------- Empty states ---------- */
+.empty-state p{ margin:0; }
+
+/* ---------- Micro animations ---------- */
+.pulse{
+  animation: pulse .55s ease;
+}
+@keyframes pulse{
+  0%{ transform: scale(1); }
+  45%{ transform: scale(1.06); }
+  100%{ transform: scale(1); }
+}
+
+/* ---------- Responsive Enhancements ---------- */
+@media (min-width: 720px){
+  .nav{ display:flex; }
+  .menu-btn{ display:none; }
+
+  .menu-sticky__inner{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .menu-sticky__left{ width: 380px; }
+  .pill--search{ flex: 1; }
+
+  .stars__grid{ grid-template-columns: 1fr 1fr; }
+  .category__grid{ grid-template-columns: 1fr 1fr; }
+
+  .trust__card{
+    grid-template-columns: 70px 1fr;
+    align-items:start;
+  }
+
+  .footer__grid{
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    align-items:start;
+  }
+  .footer__bottom-inner{
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  .form-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 980px){
+  .menu-hero__title{ font-size: 44px; }
+  .menu-hero__subtitle{ font-size: 15px; }
+
+  /* Make star item naturally appear more dominant (Golden triangle bias) */
+  .stars__grid{
+    grid-template-columns: 1.35fr 1fr;
+    align-items: start;
+  }
+  .menu-card--star .menu-card__media{ aspect-ratio: 16/9; }
+  .menu-card--star .menu-card__body{ padding: 16px 16px 18px; }
+  .menu-card--star .menu-card__title{ font-size: 18px; }
+}
+
+/* make sure content isn't hidden behind sticky bars on anchor scroll */
+:target{
+  scroll-margin-top: 170px;
+}
+
+/* subtle selection */
+::selection{
+  background: rgba(255,212,0,.28);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  *{ scroll-behavior: auto !important; }
+  .menu-card, .btn, .icon-btn, .filter-chip, .result{ transition:none !important; }
+  .pulse{ animation:none !important; }
+}
+</style>
+  </head>
+<body class="theme-basilissa theme-basilissa--menu">
+
+  <!-- Skip Link -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Top Utility Bar -->
+  <div class="topbar" role="banner" aria-label="Top information bar">
+    <div class="container">
+      <div class="topbar__left">
+        <span class="topbar__badge">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Official Orders: <a href="tel:+233308249690">030 824 9690</a>
+        </span>
+        <span class="topbar__note" id="scam-warning">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          Beware of scams. Orders only via official lines.
+        </span>
+      </div>
+
+      <div class="topbar__right">
+        <a class="topbar__link" href="index.html">
+          <i class="fa-solid fa-house" aria-hidden="true"></i>
+          Home
+        </a>
+        <a class="topbar__link" href="#categories">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          Categories
+        </a>
+        <a class="topbar__link" href="#cart">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          Cart
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="header header--menu" aria-label="Main header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Basilissa Home">
+        <span class="brand__mark" aria-hidden="true">
+          <i class="fa-solid fa-crown"></i>
+        </span>
+        <span class="brand__text">
+          <span class="brand__name">Basilissa</span>
+          <span class="brand__tagline">Digital Menu</span>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="nav__link" href="#stars">Top Picks</a>
+        <a class="nav__link" href="#categories">Menu</a>
+        <a class="nav__link" href="#trust">Official Lines</a>
+        <a class="nav__link" href="#footer">Contact</a>
+      </nav>
+
+      <div class="header__actions" aria-label="Header actions">
+        <button class="icon-btn" type="button" aria-label="Search the menu" data-action="open-search">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        </button>
+
+        <button class="icon-btn" type="button" aria-label="Open branch selector" data-action="open-branch">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        </button>
+
+        <button class="icon-btn" type="button" aria-label="Open cart" data-action="open-cart">
+          <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+          <span class="cart-count" aria-label="Cart items count" data-cart-count>0</span>
+        </button>
+
+        <button class="menu-btn" type="button" aria-label="Open menu" data-action="toggle-menu">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div class="mobile-drawer" data-mobile-drawer hidden aria-label="Mobile navigation drawer">
+      <div class="mobile-drawer__top">
+        <span class="mobile-drawer__title">Menu</span>
+        <button class="icon-btn" type="button" aria-label="Close menu" data-action="toggle-menu">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="mobile-drawer__links" role="navigation" aria-label="Mobile navigation">
+        <a href="#stars" class="mobile-drawer__link">
+          <i class="fa-solid fa-star" aria-hidden="true"></i>
+          Top Picks
+        </a>
+        <a href="#categories" class="mobile-drawer__link">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          Categories
+        </a>
+        <a href="#filters" class="mobile-drawer__link">
+          <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+          Filters
+        </a>
+        <a href="#trust" class="mobile-drawer__link">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          Official Lines
+        </a>
+      </div>
+
+      <div class="mobile-drawer__cta">
+        <button class="btn btn--action" type="button" data-action="start-order">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          Start Order
+        </button>
+        <a class="btn btn--secondary" href="tel:+233308249690">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          Call 030 824 9690
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Category Bar (Structure only; styled + controlled by JS later) -->
+  <div class="menu-sticky" aria-label="Sticky menu bar">
+    <div class="container menu-sticky__inner">
+      <div class="menu-sticky__left" aria-label="Branch + Search">
+        <button class="pill pill--branch" type="button" data-action="open-branch" aria-label="Select branch">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+          <span data-branch-label>Choose Branch</span>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </button>
+
+        <button class="pill pill--search" type="button" data-action="open-search" aria-label="Search menu">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          Search menu
+        </button>
+      </div>
+
+      <nav class="category-tabs" aria-label="Menu categories">
+        <a class="tab is-active" href="#cat-shawarma" data-tab="shawarma">
+          <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+          Shawarma
+        </a>
+        <a class="tab" href="#cat-pizza" data-tab="pizza">
+          <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i>
+          Pizza
+        </a>
+        <a class="tab" href="#cat-burgers" data-tab="burgers">
+          <i class="fa-solid fa-burger" aria-hidden="true"></i>
+          Burgers
+        </a>
+        <a class="tab" href="#cat-chicken" data-tab="chicken">
+          <i class="fa-solid fa-drumstick-bite" aria-hidden="true"></i>
+          Chicken
+        </a>
+        <a class="tab" href="#cat-rice-sides" data-tab="rice">
+          <i class="fa-solid fa-bowl-rice" aria-hidden="true"></i>
+          Rice & Sides
+        </a>
+        <a class="tab" href="#cat-pastries" data-tab="pastries">
+          <i class="fa-solid fa-cookie-bite" aria-hidden="true"></i>
+          Pastries
+        </a>
+        <a class="tab" href="#cat-drinks" data-tab="drinks">
+          <i class="fa-solid fa-martini-glass-citrus" aria-hidden="true"></i>
+          Drinks & Gelato
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main">
+
+    <!-- Menu Hero -->
+    <section class="menu-hero" aria-label="Menu hero">
+      <div class="menu-hero__media" aria-hidden="true">
+        <img src="hero-menu.jpg" alt="" />
+      </div>
+
+      <div class="container menu-hero__content">
+        <div class="menu-hero__kicker">
+          <span class="chip chip--brand">
+            <i class="fa-solid fa-crown" aria-hidden="true"></i>
+            2026 Digital Menu
+          </span>
+          <span class="chip chip--time">
+            <i class="fa-solid fa-clock" aria-hidden="true"></i>
+            Average prep: 15–20 mins
+          </span>
+        </div>
+
+        <h1 class="menu-hero__title">Order faster. Decide easier. Enjoy more.</h1>
+
+        <p class="menu-hero__subtitle">
+          Built for mobile. Searchable. Customizable. Designed for fast ordering across Basilissa branches.
+          Prices may vary by branch.
+        </p>
+
+        <div class="menu-hero__cta" role="group" aria-label="Hero actions">
+          <button class="btn btn--action" type="button" data-action="start-order">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            Start an Order
+          </button>
+          <button class="btn btn--secondary" type="button" data-action="open-branch">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            Choose Branch
+          </button>
+          <a class="btn btn--ghost" href="tel:+233308249690">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+            Call Official Line
+          </a>
+        </div>
+
+        <div class="menu-hero__trust" aria-label="Trust strip">
+          <span class="trust-pill">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            Official Orders: <a href="tel:+233308249690">030 824 9690</a>
+          </span>
+          <span class="trust-pill">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            Search any item instantly
+          </span>
+          <span class="trust-pill">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            Filters: Spicy • Vegetarian • Kid-friendly
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOLDEN TRIANGLE: Top Picks (Star Items) -->
+    <section id="stars" class="section stars" aria-label="Top picks">
+      <div class="container">
+        <header class="section__header">
+          <div class="section__kicker">
+            <i class="fa-solid fa-star" aria-hidden="true"></i>
+            Top Picks
+          </div>
+          <h2 class="section__title">Most-ordered “Star” items</h2>
+          <p class="section__desc">
+            Built to reduce decision fatigue. Tap an item to customize, or quick-add in one press.
+          </p>
+        </header>
+
+        <div class="stars__grid" aria-label="Top items grid">
+
+          <!-- STAR ITEM: Basilissa Special Shawarma (place visually top-right via CSS later) -->
+          <article class="menu-card menu-card--star"
+                   data-product
+                   data-id="shawarma-basilissa-special"
+                   data-category="shawarma"
+                   data-tags="best-seller,spicy-option,customizable"
+                   data-veg="false"
+                   data-kids="false"
+                   data-spice="2"
+                   data-base-price="90.40">
+            <div class="menu-card__media">
+              <img src="star-shawarma-special.jpg" alt="Basilissa Special Shawarma" loading="lazy">
+              <span class="badge badge--best">
+                <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                Best Seller
+              </span>
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Basilissa Special Shawarma</h3>
+              <p class="menu-card__desc">
+                Succulent, spiced shavings with fresh vegetables and signature garlic sauce in a toasted wrap — GH₵90.40
+              </p>
+
+              <div class="menu-card__meta">
+                <span class="meta-pill">
+                  <i class="fa-solid fa-pepper-hot" aria-hidden="true"></i>
+                  Medium
+                </span>
+                <span class="meta-pill">
+                  <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                  Customizable
+                </span>
+              </div>
+
+              <div class="menu-card__actions">
+                <button class="btn btn--add" type="button" data-action="quick-add" data-sku="shawarma-basilissa-special" aria-label="Quick add Basilissa Special Shawarma">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                  Quick Add
+                </button>
+                <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="shawarma-basilissa-special" aria-label="Customize Basilissa Special Shawarma">
+                  <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                  Customize
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pepperoni Pizza -->
+          <article class="menu-card"
+                   data-product
+                   data-id="pizza-pepperoni"
+                   data-category="pizza"
+                   data-tags="popular,customizable"
+                   data-veg="false"
+                   data-kids="true"
+                   data-spice="0"
+                   data-base-price="203.40">
+            <div class="menu-card__media">
+              <img src="star-pepperoni.jpg" alt="Pepperoni Pizza" loading="lazy">
+              <span class="badge badge--popular">
+                <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                Popular
+              </span>
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Pepperoni Pizza</h3>
+              <p class="menu-card__desc">
+                Melted cheese over a bold tomato base with pepperoni slices — GH₵203.40 (Large) / GH₵180.00 (Small)
+              </p>
+
+              <div class="menu-card__meta">
+                <span class="meta-pill">
+                  <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
+                  Sizes
+                </span>
+                <span class="meta-pill">
+                  <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                  Pizza Builder
+                </span>
+              </div>
+
+              <div class="menu-card__actions">
+                <button class="btn btn--add" type="button" data-action="quick-add" data-sku="pizza-pepperoni">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                  Quick Add
+                </button>
+                <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pizza-pepperoni">
+                  <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                  Build Pizza
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Double Beef & Cheese Burger -->
+          <article class="menu-card"
+                   data-product
+                   data-id="burger-double-beef-cheese"
+                   data-category="burgers"
+                   data-tags="popular,combo-eligible,customizable"
+                   data-veg="false"
+                   data-kids="true"
+                   data-spice="0"
+                   data-base-price="124.30">
+            <div class="menu-card__media">
+              <img src="star-double-burger.jpg" alt="Double Beef and Cheese Burger" loading="lazy">
+              <span class="badge badge--popular">
+                <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                Popular
+              </span>
+            </div>
+            <div class="menu-card__body">
+              <h3 class="menu-card__title">Double Beef &amp; Cheese Burger</h3>
+              <p class="menu-card__desc">
+                Two juicy beef layers with melted cheese and crisp toppings — GH₵124.30
+              </p>
+
+              <div class="menu-card__meta">
+                <span class="meta-pill">
+                  <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+                  Combo Ready
+                </span>
+                <span class="meta-pill">
+                  <i class="fa-solid fa-kitchen-set" aria-hidden="true"></i>
+                  Made Fresh
+                </span>
+              </div>
+
+              <div class="menu-card__actions">
+                <button class="btn btn--add" type="button" data-action="quick-add" data-sku="burger-double-beef-cheese">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                  Quick Add
+                </button>
+                <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="burger-double-beef-cheese">
+                  <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                  Customize
+                </button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters + Search Row -->
+    <section id="filters" class="section filters" aria-label="Menu filters and search">
+      <div class="container">
+        <div class="filters__bar" aria-label="Filters bar">
+
+          <div class="filters__left">
+            <div class="filters__label">
+              <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+              Filters
+            </div>
+
+            <button class="filter-chip" type="button" data-filter="best-seller">
+              <i class="fa-solid fa-fire" aria-hidden="true"></i>
+              Best Seller
+            </button>
+            <button class="filter-chip" type="button" data-filter="spicy">
+              <i class="fa-solid fa-pepper-hot" aria-hidden="true"></i>
+              Spicy
+            </button>
+            <button class="filter-chip" type="button" data-filter="vegetarian">
+              <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+              Vegetarian
+            </button>
+            <button class="filter-chip" type="button" data-filter="kid-friendly">
+              <i class="fa-solid fa-child" aria-hidden="true"></i>
+              Kid-friendly
+            </button>
+            <button class="filter-chip" type="button" data-filter="combo-eligible">
+              <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+              Combo Eligible
+            </button>
+          </div>
+
+          <div class="filters__right">
+            <button class="pill pill--search" type="button" data-action="open-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              Search items
+            </button>
+            <button class="pill pill--clear" type="button" data-action="clear-filters">
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              Reset
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories (Main Menu) -->
+    <section id="categories" class="section categories" aria-label="Menu categories">
+
+      <!-- Signature Shawarmas -->
+      <section id="cat-shawarma" class="category" aria-label="Signature Shawarmas">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+                Signature Shawarmas
+              </h2>
+              <p class="category__subtitle">
+                Toasted wraps, signature sauces, and the shawarma culture Accra remembers.
+              </p>
+            </div>
+
+            <div class="category__hero" aria-label="Category hero image">
+              <img src="hero-shawarma.png" alt="Close-up shawarma with signature sauce" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Shawarma items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="shawarma-chicken"
+                     data-category="shawarma"
+                     data-tags="best-seller,combo-eligible,customizable"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="1"
+                     data-base-price="84.80">
+              <div class="menu-card__media">
+                <img src="shawarma-chicken.webp" alt="Chicken Shawarma" loading="lazy">
+                <span class="badge badge--best">
+                  <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                  Best Seller
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Chicken Shawarma</h3>
+                <p class="menu-card__desc">
+                  Succulent, spiced chicken shavings with fresh vegetables and signature garlic sauce in a toasted wrap — GH₵84.80
+                </p>
+
+                <div class="menu-card__upsell">
+                  <span class="upsell">
+                    <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+                    Add extra cheese (+GH₵15.00) or double meat (+GH₵35.00)
+                  </span>
+                </div>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="shawarma-chicken">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="shawarma-chicken">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="shawarma-beef"
+                     data-category="shawarma"
+                     data-tags="combo-eligible,customizable"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="1"
+                     data-base-price="84.80">
+              <div class="menu-card__media">
+                <img src="shawarma-beef.jpg" alt="Beef Shawarma" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Beef Shawarma</h3>
+                <p class="menu-card__desc">
+                  Tender beef slices, crisp veggies, and creamy garlic sauce in a toasted wrap — GH₵84.80
+                </p>
+
+                <div class="menu-card__upsell">
+                  <span class="upsell">
+                    <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+                    Make it a combo: Chips &amp; Coke (+GH₵40.00)
+                  </span>
+                </div>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="shawarma-beef">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="shawarma-beef">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="shawarma-vegetable"
+                     data-category="shawarma"
+                     data-tags="vegetarian,customizable"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="79.10">
+              <div class="menu-card__media">
+                <img src="shawarma-veg.jpg" alt="Vegetable Shawarma" loading="lazy">
+                <span class="badge badge--veg">
+                  <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                  Vegetarian
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Vegetable Shawarma</h3>
+                <p class="menu-card__desc">
+                  Fresh vegetables, signature sauce, and a perfectly toasted wrap — GH₵79.10
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="shawarma-vegetable">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="shawarma-vegetable">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Pizza Palace -->
+      <section id="cat-pizza" class="category" aria-label="Pizza Palace">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-pizza-slice" aria-hidden="true"></i>
+                Pizza Palace
+              </h2>
+              <p class="category__subtitle">
+                Built for sharing. Choose your size, crust, and toppings — fast.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-pizza.jpg" alt="Cheese pull pizza close-up" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Pizza items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pizza-basilissa-special"
+                     data-category="pizza"
+                     data-tags="popular,customizable,pizza-builder"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="237.30">
+              <div class="menu-card__media">
+                <img src="pizza-basilissa-special.jpg" alt="Basilissa Special Pizza" loading="lazy">
+                <span class="badge badge--popular">
+                  <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                  Popular
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Basilissa Special Pizza</h3>
+                <p class="menu-card__desc">
+                  A house classic with a generous topping mix and melted cheese — GH₵237.30
+                </p>
+
+                <div class="menu-card__upsell">
+                  <span class="upsell">
+                    <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+                    Build it: choose size, crust, then add toppings (pepperoni, beef, pineapple)
+                  </span>
+                </div>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="pizza-basilissa-special">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pizza-basilissa-special">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Build Pizza
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pizza-margherita"
+                     data-category="pizza"
+                     data-tags="vegetarian,customizable"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="180.80">
+              <div class="menu-card__media">
+                <img src="pizza-margherita.jpg" alt="Margherita Pizza" loading="lazy">
+                <span class="badge badge--veg">
+                  <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                  Vegetarian
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Margherita Pizza</h3>
+                <p class="menu-card__desc">
+                  Classic tomato base with melted cheese and a clean finish — GH₵180.80
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="pizza-margherita">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pizza-margherita">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pizza-pepperoni"
+                     data-category="pizza"
+                     data-tags="popular,customizable,pizza-builder"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="203.40">
+              <div class="menu-card__media">
+                <img src="pizza-pepperoni.jpg" alt="Pepperoni Pizza" loading="lazy">
+                <span class="badge badge--popular">
+                  <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                  Popular
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Pepperoni Pizza</h3>
+                <p class="menu-card__desc">
+                  Bold pepperoni slices over melted cheese and tomato base — GH₵203.40 (Large) / GH₵180.00 (Small)
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="pizza-pepperoni">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pizza-pepperoni">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Build Pizza
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pizza-18-family"
+                     data-category="pizza"
+                     data-tags="family-size,customizable,pizza-builder"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="210.00">
+              <div class="menu-card__media">
+                <img src="pizza-family-18.webp" alt="18 inch Family Pizza" loading="lazy">
+                <span class="badge badge--family">
+                  <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+                  Family
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">18&quot; Family Pizza</h3>
+                <p class="menu-card__desc">
+                  The big table pizza — built for sharing — from GH₵210+
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pizza-18-family">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Build Pizza
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Burgers & Sandwiches -->
+      <section id="cat-burgers" class="category" aria-label="Burgers and Sandwiches">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-burger" aria-hidden="true"></i>
+                Burgers &amp; Sandwiches
+              </h2>
+              <p class="category__subtitle">
+                Crunch, melt, and comfort — made fast, served hot.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-burger.jpg" alt="Crispy chicken burger close-up" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Burger items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="burger-accra-crispy-chicken"
+                     data-category="burgers"
+                     data-tags="popular,combo-eligible"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="1"
+                     data-base-price="96.10">
+              <div class="menu-card__media">
+                <img src="burger-accra-crispy.jpg" alt="Accra Crispy Chicken Burger" loading="lazy">
+                <span class="badge badge--popular">
+                  <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                  Popular
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Accra Crispy Chicken Burger</h3>
+                <p class="menu-card__desc">
+                  Crispy chicken, fresh toppings, and a creamy finish — GH₵96.10
+                </p>
+
+                <div class="menu-card__upsell">
+                  <span class="upsell">
+                    <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+                    Make it a combo: Chips &amp; Coke (+GH₵40.00)
+                  </span>
+                </div>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="burger-accra-crispy-chicken">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="burger-accra-crispy-chicken">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="burger-double-beef-cheese"
+                     data-category="burgers"
+                     data-tags="popular,combo-eligible"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="124.30">
+              <div class="menu-card__media">
+                <img src="burger-double.webp" alt="Double Beef and Cheese Burger" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Double Beef &amp; Cheese Burger</h3>
+                <p class="menu-card__desc">
+                  Two beef layers, melted cheese, and crisp toppings — GH₵124.30
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="burger-double-beef-cheese">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="burger-double-beef-cheese">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Chicken & Combos -->
+      <section id="cat-chicken" class="category" aria-label="Chicken and Combos">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-drumstick-bite" aria-hidden="true"></i>
+                Chicken &amp; Combos
+              </h2>
+              <p class="category__subtitle">
+                Crunchy wings, spicy hits, and combos made for speed.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-chicken.jpg" alt="Crispy chicken pieces" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Chicken items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="combo-happy-meal"
+                     data-category="chicken"
+                     data-tags="value,kid-friendly"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="69.00">
+              <div class="menu-card__media">
+                <img src="happy-meal.jpg" alt="Happy Meal Wings Fries Coke" loading="lazy">
+                <span class="badge badge--value">
+                  <i class="fa-solid fa-tag" aria-hidden="true"></i>
+                  Value
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Happy Meal (8pcs Wings + Fries + Coke)</h3>
+                <p class="menu-card__desc">
+                  A classic quick win: wings, chips, and a cold drink — GH₵69.00
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="combo-happy-meal">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="combo-happy-meal">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="combo-crispy-spicy-chicken"
+                     data-category="chicken"
+                     data-tags="spicy,combo"
+                     data-veg="false"
+                     data-kids="false"
+                     data-spice="3"
+                     data-base-price="113.00">
+              <div class="menu-card__media">
+                <img src="crispy-spicy-combo.jpg" alt="Crispy Spicy Chicken Combo" loading="lazy">
+                <span class="badge badge--spicy">
+                  <i class="fa-solid fa-pepper-hot" aria-hidden="true"></i>
+                  Spicy
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Crispy / Spicy Chicken Combo</h3>
+                <p class="menu-card__desc">
+                  Crispy chicken with chips or rice — bold, hot, satisfying — GH₵113.00
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="combo-crispy-spicy-chicken">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="combo-crispy-spicy-chicken">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Rice & Sides -->
+      <section id="cat-rice-sides" class="category" aria-label="Rice and Sides">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-bowl-rice" aria-hidden="true"></i>
+                Rice &amp; Sides
+              </h2>
+              <p class="category__subtitle">
+                Local favorites that pair perfectly with everything.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-rice.webp" alt="Fried rice close-up" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Rice and sides items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="rice-beef-fried"
+                     data-category="rice"
+                     data-tags="popular"
+                     data-veg="false"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="101.70">
+              <div class="menu-card__media">
+                <img src="beef-fried-rice.webp" alt="Beef Fried Rice" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Beef Fried Rice</h3>
+                <p class="menu-card__desc">
+                  Aromatic fried rice with beef and fresh vegetables — GH₵101.70
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="rice-beef-fried">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="rice-beef-fried">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="rice-veg-fried"
+                     data-category="rice"
+                     data-tags="vegetarian"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="96.10">
+              <div class="menu-card__media">
+                <img src="veg-fried-rice.jpg" alt="Vegetable Fried Rice" loading="lazy">
+                <span class="badge badge--veg">
+                  <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                  Vegetarian
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Vegetable Fried Rice</h3>
+                <p class="menu-card__desc">
+                  Light, tasty fried rice with fresh vegetables — GH₵96.10
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="rice-veg-fried">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="rice-veg-fried">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Customize
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="side-chips"
+                     data-category="rice"
+                     data-tags="side,kid-friendly"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="79.10">
+              <div class="menu-card__media">
+                <img src="chips.jpg" alt="Chips French Fries" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Chips (French Fries)</h3>
+                <p class="menu-card__desc">
+                  Golden, crunchy, and perfect for pairing — GH₵79.10
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--add" type="button" data-action="quick-add" data-sku="side-chips">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Quick Add
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Pastries & Sweet Treats -->
+      <section id="cat-pastries" class="category" aria-label="Pastries and Sweet Treats">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-cookie-bite" aria-hidden="true"></i>
+                Pastries &amp; Sweet Treats
+              </h2>
+              <p class="category__subtitle">
+                Light bites, sweet finishes, and bakery favorites.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-pastries.jpg" alt="Pastries assortment" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Pastries items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pastry-pound-cake"
+                     data-category="pastries"
+                     data-tags="sweet"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="pound-cake.webp" alt="Pound Cake" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Pound Cakes</h3>
+                <p class="menu-card__desc">
+                  Soft, rich slices perfect with coffee — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pastry-pound-cake">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    View Options
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pastry-muffin"
+                     data-category="pastries"
+                     data-tags="sweet,kid-friendly"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="muffin.jpg" alt="Muffin" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Muffins</h3>
+                <p class="menu-card__desc">
+                  Fresh-baked sweetness with a soft, fluffy bite — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pastry-muffin">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    View Options
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="pastry-choco-pie"
+                     data-category="pastries"
+                     data-tags="sweet"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="choco-pie.jpg" alt="Choco Pie" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Choco Pies</h3>
+                <p class="menu-card__desc">
+                  Chocolate comfort with a soft bite — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="pastry-choco-pie">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    View Options
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="category__note" aria-label="Pastry note">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            Pastry availability and pricing may vary by branch.
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Drinks & Gelato -->
+      <section id="cat-drinks" class="category" aria-label="Drinks and Gelato">
+        <div class="container">
+          <header class="category__header">
+            <div class="category__titlewrap">
+              <h2 class="category__title">
+                <i class="fa-solid fa-martini-glass-citrus" aria-hidden="true"></i>
+                Drinks &amp; Gelato
+              </h2>
+              <p class="category__subtitle">
+                Fresh juices, smoothies, premium gelato shakes, and coffee.
+              </p>
+            </div>
+
+            <div class="category__hero">
+              <img src="hero-drinks.webp" alt="Fresh juice and smoothie close-up" loading="lazy">
+            </div>
+          </header>
+
+          <div class="category__grid" aria-label="Drinks items">
+
+            <article class="menu-card"
+                     data-product
+                     data-id="drink-smoothies"
+                     data-category="drinks"
+                     data-tags="popular,kid-friendly"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="smoothies.jpg" alt="Smoothies" loading="lazy">
+                <span class="badge badge--popular">
+                  <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                  Popular
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Smoothies</h3>
+                <p class="menu-card__desc">
+                  Cold, refreshing blends made to pair with any meal — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="drink-smoothies">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Choose Flavor
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="drink-fresh-juices"
+                     data-category="drinks"
+                     data-tags="fresh"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="fresh-juices.jpg" alt="Fresh juices" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Fresh Juices</h3>
+                <p class="menu-card__desc">
+                  Bright, fresh, and cold-pressed taste — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="drink-fresh-juices">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Choose Flavor
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="drink-gelato-shake"
+                     data-category="drinks"
+                     data-tags="premium"
+                     data-veg="true"
+                     data-kids="true"
+                     data-spice="0"
+                     data-base-price="0"
+                     data-branch-only="west-hills,afienya-dawhenya">
+              <div class="menu-card__media">
+                <img src="gelato-shake.avif" alt="Premium gelato shake" loading="lazy">
+                <span class="badge badge--premium">
+                  <i class="fa-solid fa-gem" aria-hidden="true"></i>
+                  Premium
+                </span>
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Premium Gelato Shakes</h3>
+                <p class="menu-card__desc">
+                  Thick, creamy, premium gelato blends — available at selected branches
+                </p>
+
+                <div class="menu-card__availability">
+                  <span class="availability-pill">
+                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    West Hills • Afienya/Dawhenya
+                  </span>
+                </div>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="drink-gelato-shake">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    View Options
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="menu-card"
+                     data-product
+                     data-id="drink-coffee"
+                     data-category="drinks"
+                     data-tags="coffee"
+                     data-veg="true"
+                     data-kids="false"
+                     data-spice="0"
+                     data-base-price="0">
+              <div class="menu-card__media">
+                <img src="coffee.jpg" alt="Coffee" loading="lazy">
+              </div>
+              <div class="menu-card__body">
+                <h3 class="menu-card__title">Coffee</h3>
+                <p class="menu-card__desc">
+                  Clean, warm, and smooth — the perfect finish — price varies by branch
+                </p>
+
+                <div class="menu-card__actions">
+                  <button class="btn btn--secondary" type="button" data-action="open-config" data-sku="drink-coffee">
+                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                    Choose Style
+                  </button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- Trust / Official Lines -->
+    <section id="trust" class="section trust" aria-label="Official lines and safety">
+      <div class="container">
+        <div class="trust__card">
+          <div class="trust__icon" aria-hidden="true">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="trust__content">
+            <h2 class="trust__title">Order only through official lines</h2>
+            <p class="trust__text">
+              Basilissa is actively warning customers about scams. Use our official customer service line for verified orders.
+            </p>
+
+            <div class="trust__actions" role="group" aria-label="Trust actions">
+              <a class="btn btn--action" href="tel:+233308249690">
+                <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                Call 030 824 9690
+              </a>
+              <a class="btn btn--secondary" href="https://wa.me/233308249690" target="_blank" rel="noopener">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                WhatsApp Official Line
+              </a>
+            </div>
+
+            <div class="trust__mini">
+              <span class="mini-pill">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                Text-based menu for Google search visibility
+              </span>
+              <span class="mini-pill">
+                <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+                High contrast + accessible tap targets
+              </span>
+              <span class="mini-pill">
+                <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+                Optimized for fast loading
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" type="button" data-action="back-to-top" aria-label="Back to top">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+  </main>
+
+  <!-- Sticky Order Now Bar -->
+  <div class="order-sticky" aria-label="Order bar">
+    <div class="order-sticky__inner container">
+      <button class="order-sticky__btn" type="button" data-action="start-order" aria-label="Start order">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+        Order Now
+      </button>
+
+      <button class="order-sticky__btn order-sticky__btn--ghost" type="button" data-action="open-search" aria-label="Search menu">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        Search
+      </button>
+
+      <button class="order-sticky__btn order-sticky__btn--ghost" type="button" data-action="open-cart" aria-label="Open cart">
+        <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+        Cart
+        <span class="order-sticky__count" data-cart-count-mini>0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Branch Selector Drawer -->
+  <aside class="drawer" data-drawer="branch" hidden aria-label="Branch selector">
+    <div class="drawer__backdrop" data-action="close-branch"></div>
+
+    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Select branch">
+      <div class="drawer__head">
+        <h2 class="drawer__title">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+          Choose Your Nearest Branch
+        </h2>
+        <button class="icon-btn" type="button" aria-label="Close" data-action="close-branch">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="drawer__body">
+        <p class="drawer__desc">
+          Menu availability and premium items may vary by branch. Select a branch to personalize your menu.
+        </p>
+
+        <div class="branch-list" role="list" aria-label="Branch list">
+          <button class="branch-item" type="button" role="listitem" data-branch="accra-mall">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Accra Mall</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="accra-mall">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 457 7777</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="west-hills">
+            <div class="branch-item__main">
+              <div class="branch-item__name">West Hills Mall</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="west-hills">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 412 5506</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="achimota">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Achimota Mall</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="achimota">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 377 1778</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="tema-c6-c22">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Tema (C6 / C22)</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="tema-c6-c22">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 377 1777</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="dansoman">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Dansoman</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="dansoman">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 490 0500</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="labone">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Labone</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="labone">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 059 200 0930</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+
+          <button class="branch-item" type="button" role="listitem" data-branch="afienya-dawhenya">
+            <div class="branch-item__main">
+              <div class="branch-item__name">Afienya / Dawhenya</div>
+              <div class="branch-item__meta">
+                <span class="status-pill" data-open-status="afienya-dawhenya">
+                  <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                  <span data-status-text>Checking…</span>
+                </span>
+              </div>
+            </div>
+            <div class="branch-item__end">
+              <span class="branch-item__phone"><i class="fa-solid fa-phone" aria-hidden="true"></i> 054 010 2485</span>
+              <span class="branch-item__hint">Select</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="drawer__footer-note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Premium items may only appear after selecting specific branches (e.g., West Hills, Afienya/Dawhenya).
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Search Modal -->
+  <div class="modal" data-modal="search" hidden role="dialog" aria-modal="true" aria-label="Search menu">
+    <div class="modal__backdrop" data-action="close-search"></div>
+    <div class="modal__panel">
+      <div class="modal__head">
+        <h2 class="modal__title">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          Search the Menu
+        </h2>
+        <button class="icon-btn" type="button" aria-label="Close" data-action="close-search">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <form class="search-form" action="#" method="get" aria-label="Search form">
+        <label class="sr-only" for="menu-search">Search</label>
+        <input id="menu-search" name="q" type="search" placeholder="Search beef, pizza, spicy, chips..." autocomplete="off" />
+        <button class="btn btn--action" type="submit">
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          Search
+        </button>
+      </form>
+
+      <div class="search-suggestions" aria-label="Quick searches">
+        <button class="chip" type="button" data-chip="shawarma">Shawarma</button>
+        <button class="chip" type="button" data-chip="pizza">Pizza</button>
+        <button class="chip" type="button" data-chip="beef">Beef</button>
+        <button class="chip" type="button" data-chip="spicy">Spicy</button>
+        <button class="chip" type="button" data-chip="vegetarian">Vegetarian</button>
+      </div>
+
+      <div class="search-results" aria-label="Search results">
+        <div class="empty-state">
+          <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+          <p>Start typing to search the menu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Configurator Drawer (The "Builder") -->
+  <aside class="drawer drawer--config" data-drawer="config" hidden aria-label="Customize your item">
+    <div class="drawer__backdrop" data-action="close-config"></div>
+
+    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Item customization panel">
+      <div class="drawer__head">
+        <h2 class="drawer__title">
+          <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+          Customize
+        </h2>
+        <button class="icon-btn" type="button" aria-label="Close" data-action="close-config">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="drawer__body">
+
+        <!-- Filled by JS -->
+        <div class="config-head" aria-label="Selected item">
+          <div class="config-head__media">
+            <img src="assets/images/menu/items/placeholder.jpg" alt="Selected item" loading="lazy" data-config-image>
+          </div>
+          <div class="config-head__info">
+            <h3 class="config-head__title" data-config-title>Item Name</h3>
+            <p class="config-head__desc" data-config-desc>Item description will appear here.</p>
+            <div class="config-head__price">
+              <span class="price" data-config-price>GH₵0.00</span>
+              <span class="meta-pill" data-config-branch>Branch: Not selected</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Required choices (pizza builder) -->
+        <section class="config-section" aria-label="Required selections">
+          <h4 class="config-section__title">
+            <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+            Required Selections
+          </h4>
+
+          <div class="config-block" data-config-block="size">
+            <div class="config-block__head">
+              <div class="config-block__label">Step 1: Choose Size</div>
+              <div class="config-block__hint">Prices update instantly.</div>
+            </div>
+
+            <div class="config-options" role="radiogroup" aria-label="Pizza size">
+              <label class="option">
+                <input type="radio" name="size" value="small" data-price-delta="0">
+                <span>Small</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="size" value="medium" data-price-delta="15">
+                <span>Medium</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="size" value="large" data-price-delta="30">
+                <span>Large</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="size" value="family-18" data-price-delta="60">
+                <span>18&quot; Family</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="config-block" data-config-block="crust">
+            <div class="config-block__head">
+              <div class="config-block__label">Step 2: Choose Crust</div>
+              <div class="config-block__hint">Thin, thick, or stuffed.</div>
+            </div>
+
+            <div class="config-options" role="radiogroup" aria-label="Pizza crust">
+              <label class="option">
+                <input type="radio" name="crust" value="thin" data-price-delta="0">
+                <span>Thin</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="crust" value="thick" data-price-delta="10">
+                <span>Thick</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="crust" value="stuffed" data-price-delta="25">
+                <span>Stuffed</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Remove section (Free) -->
+        <section class="config-section" aria-label="Remove ingredients">
+          <h4 class="config-section__title">
+            <i class="fa-regular fa-square-minus" aria-hidden="true"></i>
+            Remove (Free)
+          </h4>
+
+          <div class="config-grid">
+            <label class="check">
+              <input type="checkbox" name="remove" value="no-onions">
+              <span>No onions</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="remove" value="no-cabbage">
+              <span>No cabbage</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="remove" value="no-chili">
+              <span>No chili</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" name="remove" value="no-sauce">
+              <span>No sauce</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Extras section (Paid) -->
+        <section class="config-section" aria-label="Add extras">
+          <h4 class="config-section__title">
+            <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+            Extras (Paid)
+          </h4>
+
+          <div class="extras-list">
+            <label class="extra">
+              <input type="checkbox" name="extra" value="extra-cheese" data-price="15.00">
+              <span class="extra__main">
+                <span class="extra__name">Extra Cheese</span>
+                <span class="extra__desc">Creamy, melted upgrade</span>
+              </span>
+              <span class="extra__price">+GH₵15.00</span>
+            </label>
+
+            <label class="extra">
+              <input type="checkbox" name="extra" value="extra-sausage" data-price="20.00">
+              <span class="extra__main">
+                <span class="extra__name">Extra Sausage</span>
+                <span class="extra__desc">Bolder bite</span>
+              </span>
+              <span class="extra__price">+GH₵20.00</span>
+            </label>
+
+            <label class="extra">
+              <input type="checkbox" name="extra" value="double-meat" data-price="35.00">
+              <span class="extra__main">
+                <span class="extra__name">Double Meat</span>
+                <span class="extra__desc">For serious hunger</span>
+              </span>
+              <span class="extra__price">+GH₵35.00</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Smart combo upgrade -->
+        <section class="config-section" aria-label="Combo upgrade">
+          <div class="combo-box">
+            <div class="combo-box__head">
+              <div class="combo-box__title">
+                <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+                Make it a Combo
+              </div>
+              <div class="combo-box__hint">Recommended upgrade</div>
+            </div>
+
+            <label class="toggle">
+              <input type="checkbox" name="combo" value="combo-upgrade" data-price="40.00">
+              <span class="toggle__ui" aria-hidden="true"></span>
+              <span class="toggle__text">Add chips &amp; coke for only +GH₵40.00</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Special instructions -->
+        <section class="config-section" aria-label="Special instructions">
+          <h4 class="config-section__title">
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+            Special Instructions
+          </h4>
+          <textarea class="instructions" rows="3" placeholder="Example: Extra spicy, toast twice, wrap tightly..." data-instructions></textarea>
+        </section>
+
+        <!-- Pairing suggestions -->
+        <section class="config-section" aria-label="Pairing suggestions">
+          <h4 class="config-section__title">
+            <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+            Pairs well with
+          </h4>
+          <div class="pair-grid">
+            <button class="pair" type="button" data-action="pair-add" data-sku="side-chips">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              Large Chips
+            </button>
+            <button class="pair" type="button" data-action="pair-add" data-sku="drink-smoothies">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              Smoothie
+            </button>
+            <button class="pair" type="button" data-action="pair-add" data-sku="combo-happy-meal">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              Happy Meal
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="drawer__foot" aria-label="Configurator footer">
+        <div class="drawer__summary">
+          <div class="drawer__summary-row">
+            <span>Total</span>
+            <strong data-config-total>GH₵0.00</strong>
+          </div>
+          <div class="drawer__summary-row">
+            <span>Quantity</span>
+            <div class="qty">
+              <button class="qty__btn" type="button" aria-label="Decrease" data-action="qty-minus">
+                <i class="fa-solid fa-minus" aria-hidden="true"></i>
+              </button>
+              <input class="qty__input" type="number" min="1" value="1" data-config-qty aria-label="Quantity">
+              <button class="qty__btn" type="button" aria-label="Increase" data-action="qty-plus">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer__foot-actions" role="group" aria-label="Add to cart actions">
+          <button class="btn btn--secondary" type="button" data-action="save-and-close">
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+            Save
+          </button>
+          <button class="btn btn--action" type="button" data-action="add-config-to-cart">
+            <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+            Add to Cart
+          </button>
+        </div>
+
+        <p class="drawer__foot-note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Checkout will summarize your choices so you can confirm before paying.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Cart Drawer -->
+  <aside class="cart-drawer" data-cart-drawer hidden aria-label="Shopping cart">
+    <div class="cart-drawer__backdrop" data-action="close-cart"></div>
+
+    <div class="cart-drawer__panel" role="dialog" aria-modal="true" aria-label="Cart panel">
+      <div class="cart-drawer__head">
+        <h2 class="cart-drawer__title">
+          <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+          Your Cart
+        </h2>
+        <button class="icon-btn" type="button" aria-label="Close cart" data-action="close-cart">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="cart-drawer__body" aria-label="Cart items">
+        <div class="cart-empty" data-cart-empty>
+          <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+          <h3>Your cart is empty</h3>
+          <p>Quick add an item or customize to start your order.</p>
+          <button class="btn btn--action" type="button" data-action="start-order">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            Start Order
+          </button>
+        </div>
+
+        <div class="cart-items" data-cart-items hidden>
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <div class="cart-drawer__foot" aria-label="Cart summary">
+        <div class="cart-summary">
+          <div class="cart-summary__row">
+            <span>Subtotal</span>
+            <strong data-cart-subtotal>GH₵0.00</strong>
+          </div>
+          <div class="cart-summary__row">
+            <span>Branch</span>
+            <strong data-cart-branch>Not selected</strong>
+          </div>
+        </div>
+
+        <div class="cart-drawer__actions" role="group" aria-label="Cart actions">
+          <button class="btn btn--secondary" type="button" data-action="clear-cart">
+            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            Clear Cart
+          </button>
+
+          <button class="btn btn--action" type="button" data-action="checkout">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            Checkout
+          </button>
+        </div>
+
+        <p class="cart-drawer__note">
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          For safety, confirm orders via 030 824 9690.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Checkout Modal (Summary) -->
+  <div class="modal" data-modal="checkout" hidden role="dialog" aria-modal="true" aria-label="Checkout summary">
+    <div class="modal__backdrop" data-action="close-checkout"></div>
+
+    <div class="modal__panel">
+      <div class="modal__head">
+        <h2 class="modal__title">
+          <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+          Confirm Your Order
+        </h2>
+        <button class="icon-btn" type="button" aria-label="Close" data-action="close-checkout">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="modal__body" aria-label="Checkout content">
+        <div class="checkout-branch" aria-label="Branch summary">
+          <div class="checkout-branch__label">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            Selected Branch
+          </div>
+          <strong class="checkout-branch__value" data-checkout-branch>Not selected</strong>
+          <div class="checkout-branch__hint">
+            Premium items may depend on branch availability.
+          </div>
+        </div>
+
+        <div class="checkout-list" aria-label="Order summary list" data-checkout-items>
+          <!-- Injected by JS -->
+        </div>
+
+        <div class="checkout-total" aria-label="Checkout total">
+          <span>Total</span>
+          <strong data-checkout-total>GH₵0.00</strong>
+        </div>
+
+        <div class="checkout-instructions" aria-label="Customer details">
+          <h3 class="checkout-instructions__title">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            Your Details
+          </h3>
+
+          <div class="form-grid">
+            <label class="field">
+              <span class="field__label">Name</span>
+              <input class="field__input" type="text" placeholder="Your name" data-customer-name>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Phone</span>
+              <input class="field__input" type="tel" placeholder="Your phone number" data-customer-phone>
+            </label>
+
+            <label class="field field--full">
+              <span class="field__label">Delivery or Pickup?</span>
+              <select class="field__input" data-order-type>
+                <option value="delivery">Delivery</option>
+                <option value="pickup">Pickup</option>
+              </select>
+            </label>
+
+            <label class="field field--full">
+              <span class="field__label">Location (if delivery)</span>
+              <input class="field__input" type="text" placeholder="Example: East Legon, near..." data-delivery-location>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal__foot" aria-label="Checkout actions">
+        <button class="btn btn--secondary" type="button" data-action="close-checkout">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+          Back
+        </button>
+
+        <button class="btn btn--action" type="button" data-action="checkout-whatsapp">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          Send via WhatsApp
+        </button>
+
+        <a class="btn btn--ghost" href="tel:+233308249690">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          Call Official Line
+        </a>
+      </div>
+
+      <p class="modal__note">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        Only trust orders processed through official Basilissa numbers.
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer" aria-label="Footer">
+    <div class="container footer__grid">
+
+      <div class="footer__brand">
+        <div class="brand footer-brand">
+          <span class="brand__mark" aria-hidden="true">
+            <i class="fa-solid fa-crown"></i>
+          </span>
+          <span class="brand__text">
+            <span class="brand__name">Basilissa</span>
+            <span class="brand__tagline">Quality Food, Great Taste!</span>
+          </span>
+        </div>
+
+        <p class="footer__desc">
+          A multi-branch, high-volume family restaurant brand — built for speed, consistency, and taste.
+          This digital menu is text-based for search, fast to load, and designed for mobile ordering.
+        </p>
+
+        <div class="footer__hotline" aria-label="Official hotline">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          Official Orders: <a href="tel:+233308249690">030 824 9690</a>
+        </div>
+
+        <div class="footer__social" aria-label="Social links">
+          <a class="social-btn" href="https://www.instagram.com/basilissa_ghana/" aria-label="Instagram" target="_blank" rel="noopener">
+            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a class="social-btn" href="https://wa.me/233308249690" aria-label="WhatsApp" target="_blank" rel="noopener">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          </a>
+          <a class="social-btn" href="tel:+233308249690" aria-label="Call official line">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer__links" aria-label="Menu links">
+        <h3 class="footer__title">Menu</h3>
+        <a class="footer__link" href="#cat-shawarma">Signature Shawarmas</a>
+        <a class="footer__link" href="#cat-pizza">Pizza Palace</a>
+        <a class="footer__link" href="#cat-burgers">Burgers &amp; Sandwiches</a>
+        <a class="footer__link" href="#cat-chicken">Chicken &amp; Combos</a>
+        <a class="footer__link" href="#cat-rice-sides">Rice &amp; Sides</a>
+        <a class="footer__link" href="#cat-pastries">Pastries</a>
+        <a class="footer__link" href="#cat-drinks">Drinks &amp; Gelato</a>
+      </div>
+
+      <div class="footer__links" aria-label="Help links">
+        <h3 class="footer__title">Help</h3>
+        <a class="footer__link" href="#trust">Official Lines</a>
+        <a class="footer__link" href="index.html#branches">Branches</a>
+        <a class="footer__link" href="contact.html">Contact</a>
+        <a class="footer__link" href="privacy.html">Privacy</a>
+      </div>
+
+      <div class="footer__links" aria-label="Branches quick list">
+        <h3 class="footer__title">Branches</h3>
+        <span class="footer__mini">Accra Mall — 054 457 7777</span>
+        <span class="footer__mini">West Hills — 054 412 5506</span>
+        <span class="footer__mini">Achimota — 054 377 1778</span>
+        <span class="footer__mini">Tema (C6/C22) — 054 377 1777</span>
+        <span class="footer__mini">Dansoman — 054 490 0500</span>
+        <span class="footer__mini">Labone — 059 200 0930</span>
+        <span class="footer__mini">Afienya/Dawhenya — 054 010 2485</span>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <span>© <span data-year>2026</span> Basilissa Family Restaurant. All rights reserved.</span>
+        <span class="footer__bottom-note">Quality Food, Great Taste!</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+<script>
+/* ==========================================================
+   BASILISSA — MENU PAGE SCRIPT (All Features)
+   - Mobile drawer (hamburger)
+   - Sticky category tabs active state
+   - Smooth anchor scrolling
+   - Branch selector drawer + persistence
+   - Branch-based availability (premium items)
+   - Search modal (live search)
+   - Filters (spicy/veg/kids/tags)
+   - Product configurator drawer:
+       * Remove (free)
+       * Extras (paid)
+       * Pizza builder (size/crust)
+       * Combo toggle (+40)
+       * Special instructions
+       * Live total calculation
+       * Quantity
+       * Save / Add to cart
+   - Cart drawer:
+       * Render items
+       * Qty controls
+       * Remove
+       * Clear cart
+       * Subtotal
+   - Checkout modal summary:
+       * Customer details
+       * WhatsApp order message
+       * Call official line
+   - Back to top button
+   - Mini cart count in sticky order bar
+   ========================================================== */
+
+(function () {
+  "use strict";
+
+  /* ---------- Helpers ---------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+  function lockScroll(lock) {
+    document.documentElement.classList.toggle("scroll-lock", !!lock);
+    document.body.classList.toggle("scroll-lock", !!lock);
+  }
+
+  function safeFocus(el) {
+    try { el && el.focus && el.focus(); } catch (_) {}
+  }
+
+  function formatGHS(num) {
+    const n = Number(num);
+    if (!isFinite(n)) return "GH₵0.00";
+    return "GH₵" + (Math.round(n * 100) / 100).toFixed(2);
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    }[c]));
+  }
+
+  function pickText(el) {
+    return (el?.textContent || "").replace(/\s+/g, " ").trim();
+  }
+
+  function toBool(val) {
+    return String(val).toLowerCase() === "true";
+  }
+
+  function getNowGhana() {
+    // JS Date is already local; user is in Ghana timezone.
+    return new Date();
+  }
+
+  /* ---------- Config ---------- */
+  const CONFIG = {
+    officialPhone: "+233308249690",
+    officialPhoneDisplay: "030 824 9690",
+    whatsappPhone: "233308249690",
+    comboPrice: 40.0,
+
+    storage: {
+      branchKey: "basilissa_branch_v1",
+      cartKey: "basilissa_menu_cart_v1"
+    },
+
+    // Branch hours (simple defaults; tweak later if needed)
+    branchHours: {
+      "accra-mall": { days: [0,1,2,3,4,5,6], open: "09:00", close: "22:00" },
+      "west-hills": { days: [0,1,2,3,4,5,6], open: "09:00", close: "22:00" },
+      "achimota": { days: [0,1,2,3,4,5,6], open: "09:00", close: "22:00" },
+      "tema-c6-c22": { days: [0,1,2,3,4,5,6], open: "09:00", close: "22:30" },
+      "dansoman": { days: [0,1,2,3,4,5,6], open: "10:00", close: "22:00" },
+      "labone": { days: [0,1,2,3,4,5,6], open: "10:00", close: "23:00" },
+      "afienya-dawhenya": { days: [0,1,2,3,4,5,6], open: "10:00", close: "22:00" }
+    }
+  };
+
+  /* ---------- DOM ---------- */
+  const dom = {
+    year: $("[data-year]"),
+
+    // Drawers/Modals
+    mobileDrawer: $("[data-mobile-drawer]"),
+    searchModal: $("[data-modal='search']"),
+    checkoutModal: $("[data-modal='checkout']"),
+    branchDrawer: $("[data-drawer='branch']"),
+    configDrawer: $("[data-drawer='config']"),
+    cartDrawer: $("[data-cart-drawer]"),
+
+    // Buttons / actions exist via delegation, but keep some refs
+    menuSticky: $(".menu-sticky"),
+    tabs: $$(".category-tabs .tab"),
+    categorySections: $$(".category"),
+    backToTop: $(".back-to-top"),
+
+    // Branch label
+    branchLabel: $("[data-branch-label]"),
+    cartBranch: $("[data-cart-branch]"),
+    configBranch: $("[data-config-branch]"),
+    checkoutBranch: $("[data-checkout-branch]"),
+
+    // Open status pills
+    statusPills: $$("[data-open-status]"),
+
+    // Search
+    searchInput: $("#menu-search"),
+    searchResults: $(".search-results"),
+
+    // Filters
+    filterChips: $$(".filter-chip"),
+    resetFiltersBtn: $("[data-action='clear-filters']"),
+
+    // Products
+    products: $$("[data-product]"),
+
+    // Config panel bindings
+    configImage: $("[data-config-image]"),
+    configTitle: $("[data-config-title]"),
+    configDesc: $("[data-config-desc]"),
+    configPrice: $("[data-config-price]"),
+    configTotal: $("[data-config-total]"),
+    configQty: $("[data-config-qty]"),
+    instructions: $("[data-instructions]"),
+
+    // Cart
+    cartCount: $("[data-cart-count]"),
+    cartCountMini: $("[data-cart-count-mini]"),
+    cartEmpty: $("[data-cart-empty]"),
+    cartItemsWrap: $("[data-cart-items]"),
+    cartSubtotal: $("[data-cart-subtotal]"),
+
+    // Checkout
+    checkoutItems: $("[data-checkout-items]"),
+    checkoutTotal: $("[data-checkout-total]"),
+    customerName: $("[data-customer-name]"),
+    customerPhone: $("[data-customer-phone]"),
+    orderType: $("[data-order-type]"),
+    deliveryLocation: $("[data-delivery-location]")
+  };
+
+  /* ---------- State ---------- */
+  let state = {
+    branch: loadBranch() || null,
+    filters: {
+      bestSeller: false,
+      spicy: false,
+      vegetarian: false,
+      kidFriendly: false,
+      comboEligible: false
+    },
+    // active config item
+    config: {
+      sku: null,
+      basePrice: 0,
+      qty: 1,
+      sizeDelta: 0,
+      crustDelta: 0,
+      extras: [], // {name, price}
+      removes: [], // [value]
+      combo: false,
+      instructions: ""
+    },
+    cart: loadCart()
+  };
+
+  /* ---------- Init ---------- */
+  initYear();
+  initSmoothAnchors();
+  initCategorySpy();
+  initOpenStatuses();
+  initBranchUI();
+  applyAllFiltersAndAvailability();
+  renderCartCounts();
+  renderCartDrawer();
+  initBackToTop();
+  initAccessibilityBackdropClose();
+
+  // Refresh open/close every minute
+  setInterval(initOpenStatuses, 60 * 1000);
+
+  /* ==========================================================
+     Core UI: drawers/modals open/close
+     ========================================================== */
+  function openEl(el) {
+    if (!el) return;
+    el.removeAttribute("hidden");
+    lockScroll(true);
+  }
+  function closeEl(el) {
+    if (!el) return;
+    el.setAttribute("hidden", "");
+    lockScroll(false);
+  }
+
+  function toggleMobileDrawer() {
+    if (!dom.mobileDrawer) return;
+    if (dom.mobileDrawer.hasAttribute("hidden")) openEl(dom.mobileDrawer);
+    else closeEl(dom.mobileDrawer);
+  }
+
+  function openSearch() {
+    openEl(dom.searchModal);
+    if (dom.searchInput) {
+      dom.searchInput.value = "";
+      renderSearchEmpty();
+      setTimeout(() => safeFocus(dom.searchInput), 30);
+    }
+  }
+
+  function closeSearch() {
+    closeEl(dom.searchModal);
+  }
+
+  function openCart() {
+    openEl(dom.cartDrawer);
+    renderCartDrawer();
+  }
+
+  function closeCart() {
+    closeEl(dom.cartDrawer);
+  }
+
+  function openBranchDrawer() {
+    openEl(dom.branchDrawer);
+  }
+
+  function closeBranchDrawer() {
+    closeEl(dom.branchDrawer);
+  }
+
+  function openConfigDrawer(sku) {
+    if (!sku) return;
+    const product = getProductBySku(sku);
+    if (!product) return;
+
+    hydrateConfigFromProduct(product);
+    openEl(dom.configDrawer);
+    renderConfigPanel();
+    setTimeout(() => {
+      const firstFocusable = dom.configDrawer?.querySelector("button, input, textarea, select");
+      safeFocus(firstFocusable);
+    }, 50);
+  }
+
+  function closeConfigDrawer() {
+    closeEl(dom.configDrawer);
+  }
+
+  function openCheckout() {
+    openEl(dom.checkoutModal);
+    renderCheckout();
+  }
+
+  function closeCheckout() {
+    closeEl(dom.checkoutModal);
+  }
+
+  /* Close on ESC */
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (dom.searchModal && !dom.searchModal.hasAttribute("hidden")) return closeSearch();
+    if (dom.checkoutModal && !dom.checkoutModal.hasAttribute("hidden")) return closeCheckout();
+    if (dom.configDrawer && !dom.configDrawer.hasAttribute("hidden")) return closeConfigDrawer();
+    if (dom.branchDrawer && !dom.branchDrawer.hasAttribute("hidden")) return closeBranchDrawer();
+    if (dom.cartDrawer && !dom.cartDrawer.hasAttribute("hidden")) return closeCart();
+    if (dom.mobileDrawer && !dom.mobileDrawer.hasAttribute("hidden")) return toggleMobileDrawer();
+  });
+
+  /* Backdrop clicks close */
+  function initAccessibilityBackdropClose() {
+    // Branch/config drawers use data-action; still add safe close for backdrop
+    const backdrops = $$(".drawer__backdrop, .modal__backdrop, .cart-drawer__backdrop");
+    backdrops.forEach((bd) => {
+      bd.addEventListener("click", () => {
+        // rely on data-action in delegation, but this is a fallback
+        if (dom.searchModal && !dom.searchModal.hasAttribute("hidden")) closeSearch();
+        if (dom.checkoutModal && !dom.checkoutModal.hasAttribute("hidden")) closeCheckout();
+        if (dom.configDrawer && !dom.configDrawer.hasAttribute("hidden")) closeConfigDrawer();
+        if (dom.branchDrawer && !dom.branchDrawer.hasAttribute("hidden")) closeBranchDrawer();
+        if (dom.cartDrawer && !dom.cartDrawer.hasAttribute("hidden")) closeCart();
+        if (dom.mobileDrawer && !dom.mobileDrawer.hasAttribute("hidden")) toggleMobileDrawer();
+      });
+    });
+  }
+
+  /* ==========================================================
+     Event Delegation (All actions)
+     ========================================================== */
+  document.addEventListener("click", (e) => {
+    const actionEl = e.target.closest("[data-action]");
+    const branchItem = e.target.closest("[data-branch]");
+    const filterChip = e.target.closest(".filter-chip");
+    const tab = e.target.closest(".category-tabs .tab");
+    const productCard = e.target.closest("[data-product]");
+    const quickAddBtn = e.target.closest("[data-action='quick-add']");
+    const configBtn = e.target.closest("[data-action='open-config']");
+    const pairBtn = e.target.closest("[data-action='pair-add']");
+
+    // Category tabs: keep default anchor but also close drawer
+    if (tab) {
+      closeEl(dom.mobileDrawer);
+      setActiveTabByHref(tab.getAttribute("href"));
+      return;
+    }
+
+    // Filter chips
+    if (filterChip) {
+      e.preventDefault();
+      toggleFilterChip(filterChip);
+      return;
+    }
+
+    // Branch selection
+    if (branchItem) {
+      e.preventDefault();
+      const key = branchItem.getAttribute("data-branch");
+      if (key) setBranch(key);
+      closeBranchDrawer();
+      return;
+    }
+
+    // Quick add
+    if (quickAddBtn) {
+      e.preventDefault();
+      const sku = quickAddBtn.getAttribute("data-sku");
+      if (sku) {
+        addToCartQuick(sku);
+        openCart();
+      }
+      return;
+    }
+
+    // Open configurator
+    if (configBtn) {
+      e.preventDefault();
+      const sku = configBtn.getAttribute("data-sku");
+      openConfigDrawer(sku);
+      return;
+    }
+
+    // Clicking a product card itself should open config (conversion)
+    if (productCard && !e.target.closest("button,a,input,label,textarea,select")) {
+      const sku = productCard.getAttribute("data-id");
+      if (sku) openConfigDrawer(sku);
+      return;
+    }
+
+    // Pair add (inside config)
+    if (pairBtn) {
+      e.preventDefault();
+      const sku = pairBtn.getAttribute("data-sku");
+      if (sku) addToCartQuick(sku);
+      pulseCartCounts();
+      return;
+    }
+
+    if (!actionEl) return;
+
+    const action = actionEl.getAttribute("data-action");
+
+    switch (action) {
+      /* Header */
+      case "toggle-menu":
+        e.preventDefault();
+        toggleMobileDrawer();
+        break;
+
+      case "open-search":
+        e.preventDefault();
+        openSearch();
+        break;
+
+      case "close-search":
+        e.preventDefault();
+        closeSearch();
+        break;
+
+      case "open-cart":
+        e.preventDefault();
+        openCart();
+        break;
+
+      case "close-cart":
+        e.preventDefault();
+        closeCart();
+        break;
+
+      case "open-branch":
+        e.preventDefault();
+        openBranchDrawer();
+        break;
+
+      case "close-branch":
+        e.preventDefault();
+        closeBranchDrawer();
+        break;
+
+      /* Ordering */
+      case "start-order":
+        e.preventDefault();
+        // Start order means: ensure branch chosen -> open cart
+        if (!state.branch) openBranchDrawer();
+        else openCart();
+        break;
+
+      case "clear-cart":
+        e.preventDefault();
+        clearCart();
+        break;
+
+      case "checkout":
+        e.preventDefault();
+        openCheckout();
+        break;
+
+      case "close-checkout":
+        e.preventDefault();
+        closeCheckout();
+        break;
+
+      case "checkout-whatsapp":
+        e.preventDefault();
+        sendOrderToWhatsApp();
+        break;
+
+      /* Filters */
+      case "clear-filters":
+        e.preventDefault();
+        resetFilters();
+        break;
+
+      /* Configurator actions */
+      case "close-config":
+        e.preventDefault();
+        closeConfigDrawer();
+        break;
+
+      case "qty-plus":
+        e.preventDefault();
+        setConfigQty(state.config.qty + 1);
+        break;
+
+      case "qty-minus":
+        e.preventDefault();
+        setConfigQty(state.config.qty - 1);
+        break;
+
+      case "save-and-close":
+        e.preventDefault();
+        // Save current selections for this SKU so if reopened it persists in cart? (no cart add)
+        // We'll just keep state.config in memory and close.
+        closeConfigDrawer();
+        break;
+
+      case "add-config-to-cart":
+        e.preventDefault();
+        addConfigToCart();
+        closeConfigDrawer();
+        openCart();
+        break;
+
+      case "back-to-top":
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        break;
+
+      default:
+        break;
+    }
+  });
+
+  /* Search typing */
+  if (dom.searchInput) {
+    dom.searchInput.addEventListener("input", () => {
+      const q = dom.searchInput.value.trim();
+      if (!q) return renderSearchEmpty();
+      renderSearchResults(q);
+    });
+  }
+
+  const searchForm = $(".search-form");
+  if (searchForm) {
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = dom.searchInput?.value?.trim() || "";
+      if (!q) return;
+      renderSearchResults(q);
+    });
+  }
+
+  /* Configurator live listeners (change delegation inside drawer) */
+  if (dom.configDrawer) {
+    dom.configDrawer.addEventListener("change", (e) => {
+      const t = e.target;
+
+      // Size
+      if (t && t.matches('input[type="radio"][name="size"]')) {
+        state.config.sizeDelta = Number(t.getAttribute("data-price-delta") || 0);
+        renderConfigTotals();
+      }
+
+      // Crust
+      if (t && t.matches('input[type="radio"][name="crust"]')) {
+        state.config.crustDelta = Number(t.getAttribute("data-price-delta") || 0);
+        renderConfigTotals();
+      }
+
+      // Removes
+      if (t && t.matches('input[type="checkbox"][name="remove"]')) {
+        syncRemovesFromUI();
+        renderConfigTotals();
+      }
+
+      // Extras
+      if (t && t.matches('input[type="checkbox"][name="extra"]')) {
+        syncExtrasFromUI();
+        renderConfigTotals();
+      }
+
+      // Combo
+      if (t && t.matches('input[type="checkbox"][name="combo"]')) {
+        state.config.combo = !!t.checked;
+        renderConfigTotals();
+      }
+
+      // Qty input
+      if (t && t.matches("[data-config-qty]")) {
+        setConfigQty(Number(t.value || 1));
+      }
+    });
+
+    dom.configDrawer.addEventListener("input", (e) => {
+      const t = e.target;
+      if (t && t.matches("[data-instructions]")) {
+        state.config.instructions = t.value || "";
+      }
+    });
+  }
+
+  /* Cart interactions inside cart drawer */
+  if (dom.cartDrawer) {
+    dom.cartDrawer.addEventListener("click", (e) => {
+      const rm = e.target.closest("[data-cart-remove]");
+      const minus = e.target.closest("[data-cart-qty='-1']");
+      const plus = e.target.closest("[data-cart-qty='1']");
+      const row = e.target.closest("[data-cart-row]");
+
+      if (rm) {
+        e.preventDefault();
+        const id = rm.getAttribute("data-cart-remove");
+        removeCartLine(id);
+        return;
+      }
+
+      if (minus && row) {
+        e.preventDefault();
+        const id = row.getAttribute("data-cart-row");
+        adjustCartQty(id, -1);
+        return;
+      }
+
+      if (plus && row) {
+        e.preventDefault();
+        const id = row.getAttribute("data-cart-row");
+        adjustCartQty(id, +1);
+        return;
+      }
+    });
+
+    dom.cartDrawer.addEventListener("change", (e) => {
+      const input = e.target.closest("[data-cart-qty-input]");
+      const row = e.target.closest("[data-cart-row]");
+      if (input && row) {
+        const id = row.getAttribute("data-cart-row");
+        const q = Number(input.value || 1);
+        setCartQty(id, q);
+      }
+    });
+  }
+
+  /* ==========================================================
+     Year
+     ========================================================== */
+  function initYear() {
+    if (dom.year) dom.year.textContent = String(new Date().getFullYear());
+  }
+
+  /* ==========================================================
+     Smooth anchors + close mobile drawer
+     ========================================================== */
+  function initSmoothAnchors() {
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute("href");
+      if (!href || href === "#") return;
+
+      // allow default if target doesn't exist
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      e.preventDefault();
+      closeEl(dom.mobileDrawer);
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      setActiveTabByHref(href);
+    });
+  }
+
+  /* ==========================================================
+     Category spy for active tab highlight
+     ========================================================== */
+  function initCategorySpy() {
+    const sections = [
+      $("#cat-shawarma"),
+      $("#cat-pizza"),
+      $("#cat-burgers"),
+      $("#cat-chicken"),
+      $("#cat-rice-sides"),
+      $("#cat-pastries"),
+      $("#cat-drinks")
+    ].filter(Boolean);
+
+    if (!("IntersectionObserver" in window) || !sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      // pick most visible
+      const visible = entries
+        .filter((en) => en.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+      if (visible && visible.target && visible.target.id) {
+        const hash = "#" + visible.target.id;
+        setActiveTabByHref(hash);
+      }
+    }, { root: null, threshold: [0.25, 0.35, 0.5, 0.65] });
+
+    sections.forEach((sec) => observer.observe(sec));
+  }
+
+  function setActiveTabByHref(href) {
+    if (!href) return;
+    dom.tabs.forEach((t) => {
+      const isActive = (t.getAttribute("href") === href);
+      t.classList.toggle("is-active", isActive);
+    });
+  }
+
+  /* ==========================================================
+     Branch selection + open/close status
+     ========================================================== */
+  function loadBranch() {
+    try { return localStorage.getItem(CONFIG.storage.branchKey); } catch (_) { return null; }
+  }
+  function saveBranch(branch) {
+    try { localStorage.setItem(CONFIG.storage.branchKey, branch); } catch (_) {}
+  }
+
+  function setBranch(branchKey) {
+    state.branch = branchKey;
+    saveBranch(branchKey);
+    initBranchUI();
+    applyAllFiltersAndAvailability();
+    renderCartDrawer(); // shows branch in cart
+    renderCheckout();   // if open
+  }
+
+  function initBranchUI() {
+    const label = branchLabel(state.branch);
+    if (dom.branchLabel) dom.branchLabel.textContent = label;
+    if (dom.cartBranch) dom.cartBranch.textContent = label;
+    if (dom.configBranch) dom.configBranch.textContent = "Branch: " + label;
+    if (dom.checkoutBranch) dom.checkoutBranch.textContent = label;
+
+    // If no branch selected, keep the label clean
+    if (!state.branch && dom.branchLabel) dom.branchLabel.textContent = "Choose Branch";
+  }
+
+  function branchLabel(key) {
+    const map = {
+      "accra-mall": "Accra Mall",
+      "west-hills": "West Hills Mall",
+      "achimota": "Achimota Mall",
+      "tema-c6-c22": "Tema (C6 / C22)",
+      "dansoman": "Dansoman",
+      "labone": "Labone",
+      "afienya-dawhenya": "Afienya / Dawhenya"
+    };
+    return map[key] || "Not selected";
+  }
+
+  function parseHHMM(str) {
+    const [h, m] = (str || "00:00").split(":").map(Number);
+    return { h: isNaN(h) ? 0 : h, m: isNaN(m) ? 0 : m };
+  }
+
+  function isOpenNow(schedule, now = getNowGhana()) {
+    if (!schedule) return { open: null, message: "Hours unavailable" };
+
+    const day = now.getDay();
+    if (Array.isArray(schedule.days) && !schedule.days.includes(day)) {
+      return { open: false, message: "Closed today" };
+    }
+
+    const { h: oh, m: om } = parseHHMM(schedule.open);
+    const { h: ch, m: cm } = parseHHMM(schedule.close);
+
+    const openMin = oh * 60 + om;
+    const closeMin = ch * 60 + cm;
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+
+    if (closeMin < openMin) {
+      const open = (nowMin >= openMin) || (nowMin <= closeMin);
+      return { open, message: open ? "Open now" : "Closed" };
+    }
+    const open = (nowMin >= openMin && nowMin <= closeMin);
+    return { open, message: open ? "Open now" : "Closed" };
+  }
+
+  function initOpenStatuses() {
+    dom.statusPills.forEach((pill) => {
+      const key = pill.getAttribute("data-open-status");
+      const schedule = CONFIG.branchHours[key];
+      const txt = pill.querySelector("[data-status-text]");
+      const result = isOpenNow(schedule);
+
+      pill.classList.remove("is-open", "is-closed", "is-unknown");
+      if (result.open === true) pill.classList.add("is-open");
+      else if (result.open === false) pill.classList.add("is-closed");
+      else pill.classList.add("is-unknown");
+
+      if (txt) txt.textContent = result.message;
+    });
+  }
+
+  /* ==========================================================
+     Filters + Branch availability
+     ========================================================== */
+  function toggleFilterChip(chipEl) {
+    const key = chipEl.getAttribute("data-filter");
+
+    // Flip state
+    switch (key) {
+      case "best-seller": state.filters.bestSeller = !state.filters.bestSeller; break;
+      case "spicy": state.filters.spicy = !state.filters.spicy; break;
+      case "vegetarian": state.filters.vegetarian = !state.filters.vegetarian; break;
+      case "kid-friendly": state.filters.kidFriendly = !state.filters.kidFriendly; break;
+      case "combo-eligible": state.filters.comboEligible = !state.filters.comboEligible; break;
+      default: break;
+    }
+
+    // Visual active class
+    const isActive = isFilterActive(key);
+    chipEl.classList.toggle("is-active", isActive);
+    chipEl.setAttribute("aria-pressed", isActive ? "true" : "false");
+
+    applyAllFiltersAndAvailability();
+  }
+
+  function isFilterActive(key) {
+    switch (key) {
+      case "best-seller": return state.filters.bestSeller;
+      case "spicy": return state.filters.spicy;
+      case "vegetarian": return state.filters.vegetarian;
+      case "kid-friendly": return state.filters.kidFriendly;
+      case "combo-eligible": return state.filters.comboEligible;
+      default: return false;
+    }
+  }
+
+  function resetFilters() {
+    state.filters = { bestSeller: false, spicy: false, vegetarian: false, kidFriendly: false, comboEligible: false };
+    dom.filterChips.forEach((chip) => chip.classList.remove("is-active"));
+    applyAllFiltersAndAvailability();
+  }
+
+  function passesFilters(productEl) {
+    // Branch availability first
+    if (!passesBranchAvailability(productEl)) return false;
+
+    const tags = (productEl.getAttribute("data-tags") || "").toLowerCase();
+    const veg = toBool(productEl.getAttribute("data-veg"));
+    const kids = toBool(productEl.getAttribute("data-kids"));
+    const spice = Number(productEl.getAttribute("data-spice") || 0);
+
+    if (state.filters.bestSeller && !tags.includes("best-seller")) return false;
+    if (state.filters.spicy && !(spice >= 2 || tags.includes("spicy"))) return false;
+    if (state.filters.vegetarian && !veg) return false;
+    if (state.filters.kidFriendly && !kids) return false;
+    if (state.filters.comboEligible && !tags.includes("combo-eligible")) return false;
+
+    return true;
+  }
+
+  function passesBranchAvailability(productEl) {
+    const only = (productEl.getAttribute("data-branch-only") || "").trim().toLowerCase();
+    if (!only) return true; // available everywhere
+    if (!state.branch) return false; // must select branch to see branch-only items
+    const allowed = only.split(",").map(s => s.trim()).filter(Boolean);
+    return allowed.includes(String(state.branch).toLowerCase());
+  }
+
+  function applyAllFiltersAndAvailability() {
+    dom.products.forEach((p) => {
+      const show = passesFilters(p);
+      p.toggleAttribute("hidden", !show);
+      p.setAttribute("aria-hidden", show ? "false" : "true");
+    });
+
+    // Optional: show empty state per category if nothing visible.
+    // We'll keep it light: categories remain even if empty for now.
+  }
+
+  /* ==========================================================
+     Search (modal)
+     ========================================================== */
+  function renderSearchEmpty() {
+    if (!dom.searchResults) return;
+    dom.searchResults.innerHTML = `
+      <div class="empty-state">
+        <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+        <p>Start typing to search the menu.</p>
+      </div>
+    `;
+  }
+
+  function buildSearchIndex() {
+    // only index visible-by-branch? No: index all, but we label availability
+    return dom.products.map((el) => {
+      const sku = el.getAttribute("data-id") || "";
+      const title = pickText($(".menu-card__title", el));
+      const desc = pickText($(".menu-card__desc", el));
+      const category = el.getAttribute("data-category") || "";
+      const tags = el.getAttribute("data-tags") || "";
+      const veg = toBool(el.getAttribute("data-veg"));
+      const kids = toBool(el.getAttribute("data-kids"));
+      const spice = Number(el.getAttribute("data-spice") || 0);
+
+      return { sku, title, desc, category, tags, veg, kids, spice, el };
+    });
+  }
+
+  function renderSearchResults(query) {
+    if (!dom.searchResults) return;
+    const q = query.toLowerCase();
+
+    const idx = buildSearchIndex();
+    const hits = idx
+      .map((it) => {
+        const hay = `${it.title} ${it.desc} ${it.category} ${it.tags}`.toLowerCase();
+        const score =
+          (it.title.toLowerCase().includes(q) ? 3 : 0) +
+          (it.desc.toLowerCase().includes(q) ? 2 : 0) +
+          (hay.includes(q) ? 1 : 0);
+        return { ...it, score };
+      })
+      .filter((it) => it.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 12);
+
+    if (!hits.length) {
+      dom.searchResults.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-regular fa-face-frown" aria-hidden="true"></i>
+          <p>No matches for "${escapeHtml(query)}".</p>
+        </div>
+      `;
+      return;
+    }
+
+    dom.searchResults.innerHTML = `
+      <div class="results" role="list">
+        ${hits.map((h) => {
+          const available = passesBranchAvailability(h.el);
+          const availabilityText = (h.el.getAttribute("data-branch-only") && !state.branch)
+            ? "Select branch to view"
+            : (available ? "Available" : "Not in this branch");
+
+          const badge = available
+            ? `<span class="result__badge ok"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>${availabilityText}</span>`
+            : `<span class="result__badge warn"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>${availabilityText}</span>`;
+
+          return `
+            <button class="result" type="button" data-jump="${escapeHtml(h.sku)}" role="listitem">
+              <div class="result__main">
+                <div class="result__title">${escapeHtml(h.title)}</div>
+                <div class="result__desc">${escapeHtml(h.desc)}</div>
+                <div class="result__meta">${badge}</div>
+              </div>
+              <div class="result__end">
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </div>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    // Jump handler
+    $$(".result", dom.searchResults).forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const sku = btn.getAttribute("data-jump");
+        if (!sku) return;
+
+        const el = getProductBySku(sku);
+        if (!el) return;
+
+        // If branch-only and branch not selected: open branch drawer
+        if (!passesBranchAvailability(el)) {
+          closeSearch();
+          openBranchDrawer();
+          return;
+        }
+
+        closeSearch();
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("pulse");
+        setTimeout(() => el.classList.remove("pulse"), 650);
+        openConfigDrawer(sku);
+      });
+    });
+  }
+
+  /* ==========================================================
+     Product helpers
+     ========================================================== */
+  function getProductBySku(sku) {
+    return dom.products.find((p) => (p.getAttribute("data-id") || "") === sku) || null;
+  }
+
+  function productSnapshot(el) {
+    const sku = el.getAttribute("data-id") || "";
+    const title = pickText($(".menu-card__title", el)) || sku;
+    const desc = pickText($(".menu-card__desc", el));
+    const img = $(".menu-card__media img", el)?.getAttribute("src") || "assets/images/menu/items/placeholder.jpg";
+    const base = Number(el.getAttribute("data-base-price") || 0);
+    const category = el.getAttribute("data-category") || "";
+    const tags = (el.getAttribute("data-tags") || "");
+    const branchOnly = (el.getAttribute("data-branch-only") || "").trim();
+
+    return { sku, title, desc, img, basePrice: base, category, tags, branchOnly };
+  }
+
+  /* ==========================================================
+     Configurator logic
+     ========================================================== */
+  function hydrateConfigFromProduct(productEl) {
+    const snap = productSnapshot(productEl);
+
+    state.config.sku = snap.sku;
+    state.config.basePrice = snap.basePrice;
+    state.config.qty = 1;
+
+    // reset all selections
+    state.config.sizeDelta = 0;
+    state.config.crustDelta = 0;
+    state.config.extras = [];
+    state.config.removes = [];
+    state.config.combo = false;
+    state.config.instructions = "";
+
+    // Reset UI inputs safely
+    resetConfigUI();
+
+    // Populate head
+    if (dom.configImage) dom.configImage.src = snap.img;
+    if (dom.configTitle) dom.configTitle.textContent = snap.title;
+    if (dom.configDesc) dom.configDesc.textContent = snap.desc || "";
+    if (dom.configPrice) dom.configPrice.textContent = formatGHS(snap.basePrice || 0);
+    if (dom.instructions) dom.instructions.value = "";
+
+    // Show/hide Pizza builder blocks depending on product tags
+    const isPizzaBuilder = (snap.tags || "").toLowerCase().includes("pizza-builder") || snap.category === "pizza";
+    toggleConfigBlock("size", isPizzaBuilder);
+    toggleConfigBlock("crust", isPizzaBuilder);
+
+    // Combo box visibility (only for combo-eligible items)
+    const comboEligible = (snap.tags || "").toLowerCase().includes("combo-eligible") || snap.category === "shawarma" || snap.category === "burgers";
+    const comboSection = $(".combo-box", dom.configDrawer);
+    if (comboSection) comboSection.toggleAttribute("hidden", !comboEligible);
+
+    // Branch-only warning banner if needed
+    const branchOnly = snap.branchOnly;
+    const warn = ensureConfigWarningNode();
+    if (branchOnly) {
+      const allowed = branchOnly.split(",").map(s => s.trim()).filter(Boolean).map(branchLabel).join(" • ");
+      warn.innerHTML = `
+        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        Available at selected branches: <strong>${escapeHtml(allowed)}</strong>
+      `;
+      warn.removeAttribute("hidden");
+    } else {
+      warn.setAttribute("hidden", "");
+    }
+
+    // Update branch display
+    if (dom.configBranch) dom.configBranch.textContent = "Branch: " + branchLabel(state.branch);
+
+    renderConfigTotals();
+  }
+
+  function ensureConfigWarningNode() {
+    let el = $(".config-warning", dom.configDrawer);
+    if (!el) {
+      const body = $(".drawer__body", dom.configDrawer) || dom.configDrawer;
+      el = document.createElement("div");
+      el.className = "config-warning";
+      el.setAttribute("hidden", "");
+      body.insertBefore(el, body.firstChild);
+    }
+    return el;
+  }
+
+  function toggleConfigBlock(blockName, show) {
+    const block = dom.configDrawer?.querySelector(`[data-config-block="${blockName}"]`);
+    if (block) block.toggleAttribute("hidden", !show);
+  }
+
+  function resetConfigUI() {
+    if (!dom.configDrawer) return;
+
+    // radios
+    $$('input[type="radio"][name="size"]', dom.configDrawer).forEach(r => r.checked = false);
+    $$('input[type="radio"][name="crust"]', dom.configDrawer).forEach(r => r.checked = false);
+
+    // checkboxes
+    $$('input[type="checkbox"][name="remove"]', dom.configDrawer).forEach(c => c.checked = false);
+    $$('input[type="checkbox"][name="extra"]', dom.configDrawer).forEach(c => c.checked = false);
+    const combo = $('input[type="checkbox"][name="combo"]', dom.configDrawer);
+    if (combo) combo.checked = false;
+
+    // qty
+    if (dom.configQty) dom.configQty.value = "1";
+    state.config.qty = 1;
+  }
+
+  function setConfigQty(qty) {
+    state.config.qty = clamp(Number(qty) || 1, 1, 99);
+    if (dom.configQty) dom.configQty.value = String(state.config.qty);
+    renderConfigTotals();
+  }
+
+  function syncRemovesFromUI() {
+    const picks = $$('input[type="checkbox"][name="remove"]', dom.configDrawer)
+      .filter(c => c.checked)
+      .map(c => c.value);
+    state.config.removes = picks;
+  }
+
+  function syncExtrasFromUI() {
+    const picks = $$('input[type="checkbox"][name="extra"]', dom.configDrawer)
+      .filter(c => c.checked)
+      .map(c => ({
+        value: c.value,
+        price: Number(c.getAttribute("data-price") || 0)
+      }));
+    state.config.extras = picks;
+  }
+
+  function configUnitTotal() {
+    const base = Number(state.config.basePrice || 0);
+    const size = Number(state.config.sizeDelta || 0);
+    const crust = Number(state.config.crustDelta || 0);
+    const extras = (state.config.extras || []).reduce((s, x) => s + (Number(x.price) || 0), 0);
+    const combo = state.config.combo ? CONFIG.comboPrice : 0;
+
+    return base + size + crust + extras + combo;
+  }
+
+  function renderConfigTotals() {
+    const unit = configUnitTotal();
+    const total = unit * (state.config.qty || 1);
+
+    if (dom.configTotal) dom.configTotal.textContent = formatGHS(total);
+    if (dom.configPrice) dom.configPrice.textContent = formatGHS(Number(state.config.basePrice || 0));
+  }
+
+  function renderConfigPanel() {
+    // Mostly handled by hydrateConfigFromProduct.
+    // Ensure totals display correct.
+    renderConfigTotals();
+  }
+
+  function addConfigToCart() {
+    // Ensure branch-only constraints enforced
+    const productEl = getProductBySku(state.config.sku);
+    if (!productEl) return;
+
+    if (!passesBranchAvailability(productEl)) {
+      // If no branch or wrong branch, force branch select
+      closeConfigDrawer();
+      openBranchDrawer();
+      return;
+    }
+
+    // Build line item
+    const snap = productSnapshot(productEl);
+    const unit = configUnitTotal();
+
+    const line = {
+      id: cryptoLineId(snap.sku),
+      sku: snap.sku,
+      title: snap.title,
+      img: snap.img,
+      branch: state.branch || null,
+      qty: state.config.qty || 1,
+
+      pricing: {
+        base: snap.basePrice,
+        sizeDelta: state.config.sizeDelta || 0,
+        crustDelta: state.config.crustDelta || 0,
+        extras: state.config.extras || [],
+        combo: !!state.config.combo,
+        comboPrice: state.config.combo ? CONFIG.comboPrice : 0,
+        unitTotal: unit
+      },
+
+      modifiers: {
+        removes: state.config.removes || [],
+        instructions: state.config.instructions || "",
+        size: getSelectedRadioValue("size"),
+        crust: getSelectedRadioValue("crust")
+      },
+
+      createdAt: Date.now()
+    };
+
+    state.cart.lines.unshift(line);
+    persistCart();
+    renderCartCounts();
+    pulseCartCounts();
+  }
+
+  function getSelectedRadioValue(name) {
+    const r = dom.configDrawer?.querySelector(`input[type="radio"][name="${name}"]:checked`);
+    return r ? r.value : "";
+  }
+
+  function cryptoLineId(seed) {
+    // stable enough unique id
+    const rnd = Math.random().toString(16).slice(2);
+    return `${seed}-${Date.now()}-${rnd}`;
+  }
+
+  /* ==========================================================
+     Cart storage + rendering
+     ========================================================== */
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(CONFIG.storage.cartKey);
+      if (!raw) return { lines: [] };
+      const data = JSON.parse(raw);
+      if (data && Array.isArray(data.lines)) return data;
+      return { lines: [] };
+    } catch (_) {
+      return { lines: [] };
+    }
+  }
+
+  function persistCart() {
+    try {
+      localStorage.setItem(CONFIG.storage.cartKey, JSON.stringify(state.cart));
+    } catch (_) {}
+    renderCartDrawer();
+  }
+
+  function renderCartCounts() {
+    const count = state.cart.lines.reduce((s, l) => s + (Number(l.qty) || 0), 0);
+    if (dom.cartCount) dom.cartCount.textContent = String(count);
+    if (dom.cartCountMini) dom.cartCountMini.textContent = String(count);
+  }
+
+  function pulseCartCounts() {
+    if (dom.cartCount) {
+      dom.cartCount.classList.add("pulse");
+      setTimeout(() => dom.cartCount.classList.remove("pulse"), 450);
+    }
+  }
+
+  function cartSubtotal() {
+    return state.cart.lines.reduce((sum, l) => {
+      const unit = Number(l?.pricing?.unitTotal || 0);
+      const qty = Number(l?.qty || 1);
+      return sum + unit * qty;
+    }, 0);
+  }
+
+  function renderCartDrawer() {
+    renderCartCounts();
+    if (!dom.cartEmpty || !dom.cartItemsWrap) return;
+
+    const has = state.cart.lines.length > 0;
+    dom.cartEmpty.toggleAttribute("hidden", has);
+    dom.cartItemsWrap.toggleAttribute("hidden", !has);
+
+    if (!has) {
+      dom.cartItemsWrap.innerHTML = "";
+      if (dom.cartSubtotal) dom.cartSubtotal.textContent = formatGHS(0);
+      if (dom.cartBranch) dom.cartBranch.textContent = branchLabel(state.branch);
+      return;
+    }
+
+    dom.cartItemsWrap.innerHTML = state.cart.lines.map((line) => {
+      const mods = line.modifiers || {};
+      const removes = (mods.removes || []).map(prettyRemove).join(", ");
+      const extras = (line.pricing?.extras || []).map(x => prettyExtra(x.value)).join(", ");
+      const size = mods.size ? `Size: ${mods.size}` : "";
+      const crust = mods.crust ? `Crust: ${mods.crust}` : "";
+      const combo = line.pricing?.combo ? "Combo: Chips & Coke" : "";
+      const notes = (mods.instructions || "").trim();
+
+      const metaParts = [size, crust, combo].filter(Boolean);
+      const modifierParts = [
+        removes ? `Remove: ${removes}` : "",
+        extras ? `Extras: ${extras}` : "",
+        notes ? `Note: ${notes}` : ""
+      ].filter(Boolean);
+
+      const unit = Number(line.pricing?.unitTotal || 0);
+      const lineTotal = unit * (Number(line.qty) || 1);
+
+      return `
+        <div class="cart-item" data-cart-row="${escapeHtml(line.id)}">
+          <div class="cart-item__img">
+            <img src="${escapeHtml(line.img)}" alt="${escapeHtml(line.title)}" loading="lazy">
+          </div>
+
+          <div class="cart-item__main">
+            <div class="cart-item__title">${escapeHtml(line.title)}</div>
+
+            <div class="cart-item__meta">
+              <span class="cart-item__price">${escapeHtml(formatGHS(unit))} each</span>
+              <span class="cart-item__line">${escapeHtml(formatGHS(lineTotal))}</span>
+            </div>
+
+            ${metaParts.length ? `<div class="cart-item__chips">${metaParts.map(ch => `<span class="mini-chip">${escapeHtml(ch)}</span>`).join("")}</div>` : ""}
+
+            ${modifierParts.length ? `<div class="cart-item__mods">${modifierParts.map(m => `<div class="mod-line">${escapeHtml(m)}</div>`).join("")}</div>` : ""}
+
+            <div class="cart-item__controls" role="group" aria-label="Quantity controls">
+              <button class="qty-btn" type="button" data-cart-qty="-1" aria-label="Decrease">
+                <i class="fa-solid fa-minus" aria-hidden="true"></i>
+              </button>
+              <input class="qty-input" type="number" min="1" max="99" value="${escapeHtml(line.qty)}" data-cart-qty-input aria-label="Quantity">
+              <button class="qty-btn" type="button" data-cart-qty="1" aria-label="Increase">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="cart-item__end">
+            <button class="icon-btn" type="button" aria-label="Remove item" data-cart-remove="${escapeHtml(line.id)}">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    if (dom.cartSubtotal) dom.cartSubtotal.textContent = formatGHS(cartSubtotal());
+    if (dom.cartBranch) dom.cartBranch.textContent = branchLabel(state.branch);
+  }
+
+  function adjustCartQty(lineId, delta) {
+    const idx = state.cart.lines.findIndex(l => l.id === lineId);
+    if (idx < 0) return;
+    const q = clamp((Number(state.cart.lines[idx].qty) || 1) + delta, 1, 99);
+    state.cart.lines[idx].qty = q;
+    persistCart();
+  }
+
+  function setCartQty(lineId, qty) {
+    const idx = state.cart.lines.findIndex(l => l.id === lineId);
+    if (idx < 0) return;
+    const q = clamp(Number(qty) || 1, 1, 99);
+    state.cart.lines[idx].qty = q;
+    persistCart();
+  }
+
+  function removeCartLine(lineId) {
+    state.cart.lines = state.cart.lines.filter(l => l.id !== lineId);
+    persistCart();
+    renderCartCounts();
+  }
+
+  function clearCart() {
+    state.cart.lines = [];
+    persistCart();
+    renderCartCounts();
+  }
+
+  function addToCartQuick(sku) {
+    const el = getProductBySku(sku);
+    if (!el) return;
+
+    // Enforce branch-only: if not allowed, open branch selector
+    if (!passesBranchAvailability(el)) {
+      openBranchDrawer();
+      return;
+    }
+
+    const snap = productSnapshot(el);
+    const line = {
+      id: cryptoLineId(snap.sku),
+      sku: snap.sku,
+      title: snap.title,
+      img: snap.img,
+      branch: state.branch || null,
+      qty: 1,
+      pricing: {
+        base: snap.basePrice,
+        sizeDelta: 0,
+        crustDelta: 0,
+        extras: [],
+        combo: false,
+        comboPrice: 0,
+        unitTotal: Number(snap.basePrice || 0)
+      },
+      modifiers: {
+        removes: [],
+        instructions: "",
+        size: "",
+        crust: ""
+      },
+      createdAt: Date.now()
+    };
+
+    state.cart.lines.unshift(line);
+    persistCart();
+    renderCartCounts();
+    pulseCartCounts();
+  }
+
+  function prettyRemove(val) {
+    const map = {
+      "no-onions": "No onions",
+      "no-cabbage": "No cabbage",
+      "no-chili": "No chili",
+      "no-sauce": "No sauce"
+    };
+    return map[val] || val;
+  }
+
+  function prettyExtra(val) {
+    const map = {
+      "extra-cheese": "Extra cheese",
+      "extra-sausage": "Extra sausage",
+      "double-meat": "Double meat"
+    };
+    return map[val] || val;
+  }
+
+  /* ==========================================================
+     Checkout summary + WhatsApp message
+     ========================================================== */
+  function renderCheckout() {
+    if (!dom.checkoutModal || dom.checkoutModal.hasAttribute("hidden")) return;
+    if (!dom.checkoutItems || !dom.checkoutTotal || !dom.checkoutBranch) return;
+
+    dom.checkoutBranch.textContent = branchLabel(state.branch);
+
+    if (!state.cart.lines.length) {
+      dom.checkoutItems.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+          <p>Your cart is empty. Add items to continue.</p>
+        </div>
+      `;
+      dom.checkoutTotal.textContent = formatGHS(0);
+      return;
+    }
+
+    dom.checkoutItems.innerHTML = state.cart.lines.map((l) => {
+      const unit = Number(l.pricing?.unitTotal || 0);
+      const total = unit * (Number(l.qty) || 1);
+
+      const mods = l.modifiers || {};
+      const lines = [];
+
+      if (mods.size) lines.push(`Size: ${mods.size}`);
+      if (mods.crust) lines.push(`Crust: ${mods.crust}`);
+      if (l.pricing?.combo) lines.push("Combo: Chips & Coke");
+
+      const removes = (mods.removes || []).map(prettyRemove);
+      if (removes.length) lines.push("Remove: " + removes.join(", "));
+
+      const extras = (l.pricing?.extras || []).map(x => prettyExtra(x.value));
+      if (extras.length) lines.push("Extras: " + extras.join(", "));
+
+      if ((mods.instructions || "").trim()) lines.push("Note: " + mods.instructions.trim());
+
+      return `
+        <div class="checkout-item">
+          <div class="checkout-item__row">
+            <strong>${escapeHtml(l.title)}</strong>
+            <span>${escapeHtml(formatGHS(total))}</span>
+          </div>
+          <div class="checkout-item__row muted">
+            <span>Qty: ${escapeHtml(l.qty)}</span>
+            <span>${escapeHtml(formatGHS(unit))} each</span>
+          </div>
+          ${lines.length ? `<div class="checkout-item__mods">${lines.map(x => `<div class="mod-line">${escapeHtml(x)}</div>`).join("")}</div>` : ""}
+        </div>
+      `;
+    }).join("");
+
+    dom.checkoutTotal.textContent = formatGHS(cartSubtotal());
+  }
+
+  function sendOrderToWhatsApp() {
+    if (!state.cart.lines.length) {
+      alert("Your cart is empty. Add items to continue.");
+      return;
+    }
+
+    // If branch not selected, force it first for operational clarity
+    if (!state.branch) {
+      closeCheckout();
+      openBranchDrawer();
+      return;
+    }
+
+    const name = (dom.customerName?.value || "").trim();
+    const phone = (dom.customerPhone?.value || "").trim();
+    const type = (dom.orderType?.value || "delivery").trim();
+    const location = (dom.deliveryLocation?.value || "").trim();
+
+    const orderLines = state.cart.lines.map((l) => {
+      const mods = l.modifiers || {};
+      const extras = (l.pricing?.extras || []).map(x => prettyExtra(x.value));
+      const removes = (mods.removes || []).map(prettyRemove);
+
+      const parts = [];
+      if (mods.size) parts.push(`Size: ${mods.size}`);
+      if (mods.crust) parts.push(`Crust: ${mods.crust}`);
+      if (l.pricing?.combo) parts.push("Combo: Chips & Coke");
+      if (removes.length) parts.push("Remove: " + removes.join(", "));
+      if (extras.length) parts.push("Extras: " + extras.join(", "));
+      if ((mods.instructions || "").trim()) parts.push("Note: " + mods.instructions.trim());
+
+      const detail = parts.length ? ` — ${parts.join(" | ")}` : "";
+      return `- ${l.title} x${l.qty}${detail}`;
+    });
+
+    const total = cartSubtotal();
+
+    const msg = [
+      "Basilissa Order",
+      "",
+      `Branch: ${branchLabel(state.branch)}`,
+      `Type: ${type}`,
+      (type === "delivery" ? (location ? `Location: ${location}` : "Location: (share location)") : "Pickup"),
+      "",
+      "Items:",
+      ...orderLines,
+      "",
+      `Subtotal: ${formatGHS(total)}`,
+      "",
+      (name ? `Name: ${name}` : "Name:"),
+      (phone ? `Phone: ${phone}` : "Phone:"),
+      "",
+      "Please confirm availability & total before payment."
+    ].join("\n");
+
+    const url = `https://wa.me/${CONFIG.whatsappPhone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank", "noopener");
+  }
+
+  /* ==========================================================
+     Back to top visibility
+     ========================================================== */
+  function initBackToTop() {
+    if (!dom.backToTop) return;
+
+    const onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      dom.backToTop.classList.toggle("is-visible", y > 800);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ==========================================================
+     Apply: year + counts + mini cart count
+     ========================================================== */
+  function renderCartCountsMini() {
+    // already done in renderCartCounts
+  }
+
+})();
+</script>
+</html>
